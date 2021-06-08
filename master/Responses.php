@@ -1,19 +1,22 @@
-<?php 
+<?php
 
-class respuestas{
+/**
+ * Class Response
+ */
+class Responses
+{
+    public $response = ['status' => "ok", "result" => []];
 
-    public  $response = [
-        'status' => "ok",
-        "result" => array()
-    ];
-
-
-    public function error_405(){
+    /**
+     * @return array
+     */
+    final public function error405()
+    {
         $this->response['status'] = "error";
-        $this->response['result'] = array(
+        $this->response['result'] = [
             "error_id" => "405",
             "error_msg" => "Metodo no permitido"
-        );
+        ];
         return $this->response;
     }
 

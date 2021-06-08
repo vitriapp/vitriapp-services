@@ -1,13 +1,13 @@
 <?php
-require_once __DIR__.'/conexion/conexion.php';
-require_once __DIR__.'/respuestas.class.php';
+require_once __DIR__ . '/connection/Connection.php';
+require_once __DIR__ . '/Responses.php';
 
 
-class auth extends conexion{
+class auth extends Connection{
 
     public function login($json){
 
-        $_respustas = new respuestas;
+        $_respustas = new Responses;
         $datos = json_decode($json,true);
         if(!isset($datos['usuario']) || !isset($datos["password"])){
             //error con los campos

@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__."/conexion/conexion.php";
-require_once __DIR__."/respuestas.class.php";
 
+require_once __DIR__ . "/connection/Connection.php";
+require_once __DIR__ . "/Responses.php";
 
-class pacientes extends conexion {
+class Patients extends Connection {
 
     private $table = "pacientes";
     private $pacienteid = "";
@@ -37,7 +37,7 @@ class pacientes extends conexion {
     }
 
     public function post($json){
-        $_respuestas = new respuestas;
+        $_respuestas = new Responses;
         $datos = json_decode($json,true);
 
         if(!isset($datos['token'])){
@@ -94,7 +94,7 @@ class pacientes extends conexion {
     }
     
     public function put($json){
-        $_respuestas = new respuestas;
+        $_respuestas = new Responses;
         $datos = json_decode($json,true);
 
         if(!isset($datos['token'])){
@@ -151,7 +151,7 @@ class pacientes extends conexion {
 
 
     public function delete($json){
-        $_respuestas = new respuestas;
+        $_respuestas = new Responses;
         $datos = json_decode($json,true);
 
         if(!isset($datos['token'])){

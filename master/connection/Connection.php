@@ -1,8 +1,10 @@
 <?php
 
-
-
-class conexion {
+/**
+ * Class Connection
+ */
+class Connection
+{
 
     private $server;
     private $user;
@@ -12,7 +14,8 @@ class conexion {
     private $conexion;
 
 
-    public function __construct(){
+    public function __construct()
+    {
         $listadatos = $this->datosConexion();
         foreach ($listadatos as $key => $value) {
             $this->server = $value['server'];
@@ -21,24 +24,25 @@ class conexion {
             $this->database = $value['database'];
             $this->port = $value['port'];
         }
-        $this->conexion = new mysqli($this->server,$this->user,$this->password,$this->database,$this->port);
-        if($this->conexion->connect_errno){
+        $this->conexion = new mysqli($this->server, $this->user, $this->password, $this->database, $this->port);
+        if ($this->conexion->connect_errno) {
             echo "algo va mal con la conexion";
             die();
         }
-
     }
 
-    private function datosConexion(){
+    private function datosConexion()
+    {
         $direccion = __DIR__;
         $jsondata = file_get_contents($direccion . "/" . "config_pdn");
         return json_decode($jsondata, true);
     }
 
 
-    private function convertirUTF8($array){
-        array_walk_recursive($array,function(&$item,$key){
-            if(!mb_detect_encoding($item,'utf-8',true)){
+    private function convertirUTF8($array)
+    {
+        array_walk_recursive($array, function (&$item, $key) {
+            if (!mb_detect_encoding($item, 'utf-8', true)) {
                 $item = utf8_encode($item);
             }
         });
@@ -46,33 +50,35 @@ class conexion {
     }
 
 
-    public function obtenerDatos($sqlstr){
+    public function obtenerDatos($sqlstr)
+    {
         $results = $this->conexion->query($sqlstr);
         $resultArray = array();
         foreach ($results as $key) {
             $resultArray[] = $key;
         }
         return $this->convertirUTF8($resultArray);
-
     }
 
 
 
-    public function nonQuery($sqlstr){
+    public function nonQuery($sqlstr)
+    {
         $results = $this->conexion->query($sqlstr);
         return $this->conexion->affected_rows;
     }
 
 
-    //INSERT 
-    public function nonQueryId($sqlstr){
+    //INSERT
+    public function nonQueryId($sqlstr)
+    {
         $results = $this->conexion->query($sqlstr);
          $filas = $this->conexion->affected_rows;
-         if($filas >= 1){
+        if ($filas >= 1) {
             return $this->conexion->insert_id;
-         }else{
-             return 0;
-         }
+        } else {
+            return 0;
+        }
     }
      
     //encriptar
