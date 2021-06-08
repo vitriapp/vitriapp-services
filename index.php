@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__.'/clases/conexion/conexion.php';
-$conexion = new conexion();
+require_once __DIR__ . '/master/connection/Connection.php';
+$conexion = new Connection();
 ?>
 <!DOCTYPE html>
 <html lang="en">

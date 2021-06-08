@@ -1,9 +1,9 @@
 <?php 
-require_once __DIR__.'/clases/auth.class.php';
-require_once __DIR__.'/clases/respuestas.class.php';
+require_once __DIR__ . '/master/auth.class.php';
+require_once __DIR__ . '/master/Responses.php';
 
 $_auth = new auth;
-$_respuestas = new respuestas;
+$_respuestas = new Responses;
 
 
 
@@ -30,7 +30,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 }else{
     header('Content-Type: application/json');
-    $datosArray = $_respuestas->error_405();
+    $datosArray = $_respuestas->error405();
     echo json_encode($datosArray);
 
 }

@@ -1,22 +1,24 @@
 <?php
-require_once __DIR__.'/clases/respuestas.class.php';
-require_once __DIR__.'/clases/pacientes.class.php';
-
-$_respuestas = new respuestas;
-$_pacientes = new pacientes;
 
 
-if($_SERVER['REQUEST_METHOD'] == "GET"){
+require_once __DIR__ . '/master/Responses.php';
+require_once __DIR__ . '/master/patients.class.php';
+
+$responses = new Responses();
+$patients = new Patients();
+
+
+if($_SERVER['REQUEST_METHOD'] === "GET"){
 
     if(isset($_GET["page"])){
         $pagina = $_GET["page"];
-        $listaPacientes = $_pacientes->listaPacientes($pagina);
+        $listaPacientes = $patients->listaPacientes($pagina);
         header("Content-Type: application/json");
         echo json_encode($listaPacientes);
         http_response_code(200);
     }else if(isset($_GET['id'])){
         $pacienteid = $_GET['id'];
-        $datosPaciente = $_pacientes->obtenerPaciente($pacienteid);
+        $datosPaciente = $patients->obtenerPaciente($pacienteid);
         header("Content-Type: application/json");
         echo json_encode($datosPaciente);
         http_response_code(200);
@@ -26,7 +28,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET"){
     //recibimos los datos enviados
     $postBody = file_get_contents("php://input");
     //enviamos los datos al manejador
-    $datosArray = $_pacientes->post($postBody);
+    $datosArray = $patients->post($postBody);
     //delvovemos una respuesta 
      header('Content-Type: application/json');
      if(isset($datosArray["result"]["error_id"])){
@@ -41,7 +43,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET"){
       //recibimos los datos enviados
       $postBody = file_get_contents("php://input");
       //enviamos datos al manejador
-      $datosArray = $_pacientes->put($postBody);
+      $datosArray = $patients->put($postBody);
         //delvovemos una respuesta 
      header('Content-Type: application/json');
      if(isset($datosArray["result"]["error_id"])){
@@ -68,7 +70,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET"){
         }
         
         //enviamos datos al manejador
-        $datosArray = $_pacientes->delete($postBody);
+        $datosArray = $patients->delete($postBody);
         //delvovemos una respuesta 
         header('Content-Type: application/json');
         if(isset($datosArray["result"]["error_id"])){
@@ -82,7 +84,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET"){
 
 }else{
     header('Content-Type: application/json');
-    $datosArray = $_respuestas->error_405();
+    $datosArray = $responses->error405();
     echo json_encode($datosArray);
 }
 
