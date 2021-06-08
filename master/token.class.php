@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__.'/conexion/conexion.php';
+require_once __DIR__ . '/connection/Connection.php';
 
-class token extends conexion{
+class token extends Connection{
 
     function actualizarTokens($fecha){
         $query = "update usuarios_token set Estado = 'Inactivo' WHERE  Fecha < '$fecha'";
