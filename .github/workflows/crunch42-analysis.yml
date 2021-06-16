@@ -45,4 +45,6 @@ jobs:
           # Upload results to Github code scanning
           upload-to-code-scanning: true
           # Github token for uploading the results
-          github-token: ${{ API_TOKEN.API_TOKEN }}
+          github-token: ${{ secrets.API_TOKEN }}
+          log-level: DEBUG
+          share-everyone: READ_ONLY
