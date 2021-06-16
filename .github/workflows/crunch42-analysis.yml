@@ -45,4 +45,4 @@ jobs:
           # Upload results to Github code scanning
           upload-to-code-scanning: true
           # Github token for uploading the results
-          github-token: ${{ github.token }}
+          github-token: ${{ API_TOKEN.API_TOKEN }}
