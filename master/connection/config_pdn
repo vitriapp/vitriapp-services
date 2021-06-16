@@ -4,6 +4,6 @@
         "user" : "u411379380_lamamapollito",
         "password" : "QWEQDASDE23423423+-+-+VVsdasdasda123+++",
         "database" : "u411379380_vitriappcombd",
-        "port": "3306"
+        "port": 3306
     }
 }
