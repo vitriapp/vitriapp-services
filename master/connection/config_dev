@@ -4,6 +4,6 @@
         "user" : "root",
         "password" : "12345678",
         "database" : "vitriappcombd",
-        "port": "3306"
+        "port": 3306
     }
 }

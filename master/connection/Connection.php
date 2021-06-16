@@ -1,90 +1,84 @@
 <?php
 
+declare(strict_types=1);
+
+namespace services\master\connection;
+
+use mysqli;
+use services\set\Sets;
+
 /**
  * Class Connection
  */
-class Connection
+class Connection extends mysqli
 {
-
     private $server;
     private $user;
     private $password;
     private $database;
     private $port;
-    private $conexion;
+    protected $connect;
 
-
-    public function __construct()
+    final public function getServer(): string
     {
-        $listadatos = $this->datosConexion();
-        foreach ($listadatos as $key => $value) {
-            $this->server = $value['server'];
-            $this->user = $value['user'];
-            $this->password = $value['password'];
-            $this->database = $value['database'];
-            $this->port = $value['port'];
+        return $this->server;
+    }
+
+    final public function getUser(): string
+    {
+        return $this->user;
+    }
+
+    final public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    final public function getDatabase(): string
+    {
+        return $this->database;
+    }
+
+    final public function getPort(): int
+    {
+        return $this->port;
+    }
+
+    final public function system(): mysqli
+    {
+        $array_data = $this->connectionData();
+        foreach ($array_data as $value) {
+            $this->server = $value[Sets::SERVER];
+            $this->user = $value[Sets::USER_DATABASE];
+            $this->password = $value[Sets::PASSWORD];
+            $this->database = $value[Sets::DATABASE];
+            $this->port = $value[Sets::PORT_MYSQL];
         }
-        $this->conexion = new mysqli($this->server, $this->user, $this->password, $this->database, $this->port);
-        if ($this->conexion->connect_errno) {
-            echo "algo va mal con la conexion";
-            die();
-        }
+
+        $this->connect = new mysqli(
+            $this->getServer(),
+            $this->getUser(),
+            $this->getPassword(),
+            $this->getDatabase(),
+            $this->getPort()
+        );
+        return $this->connect;
     }
 
-    private function datosConexion()
+    private function connectionData(): array
     {
-        $direccion = __DIR__;
-        $jsondata = file_get_contents($direccion . "/" . "config_pdn");
-        return json_decode($jsondata, true);
-    }
 
-
-    private function convertirUTF8($array)
-    {
-        array_walk_recursive($array, function (&$item, $key) {
-            if (!mb_detect_encoding($item, 'utf-8', true)) {
-                $item = utf8_encode($item);
-            }
-        });
-        return $array;
-    }
-
-
-    public function obtenerDatos($sqlstr)
-    {
-        $results = $this->conexion->query($sqlstr);
-        $resultArray = array();
-        foreach ($results as $key) {
-            $resultArray[] = $key;
-        }
-        return $this->convertirUTF8($resultArray);
-    }
-
-
-
-    public function nonQuery($sqlstr)
-    {
-        $results = $this->conexion->query($sqlstr);
-        return $this->conexion->affected_rows;
-    }
-
-
-    //INSERT
-    public function nonQueryId($sqlstr)
-    {
-        $results = $this->conexion->query($sqlstr);
-         $filas = $this->conexion->affected_rows;
-        if ($filas >= 1) {
-            return $this->conexion->insert_id;
+        $folder = __DIR__;
+        if (Sets::environment() === Sets::LOCALHOST) {
+            $json_route = file_get_contents($folder . '/' . Sets::ENVIRONMENT_DEVELOP);
         } else {
-            return 0;
+            $json_route = file_get_contents($folder . '/' . Sets::ENVIRONMENT_PRODUCTION);
         }
+        return json_decode($json_route, true);
     }
-     
-    //encriptar
 
-    protected function encriptar($string)
+    final public function closeConnect(): bool
     {
-        return md5($string);
+        return $this->close();
     }
 }
