@@ -3,6 +3,9 @@ RewriteEngine On
 
 Options -Indexes
 
+RewriteRule ^pacientes/([0-9]+)$ pacientes.php?id=$1
+RewriteRule ^pacientes/list$ pacientes.php?page=$1
+
 # esta lineas son para quitar la ext .php
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
@@ -27,6 +30,26 @@ ErrorDocument 401 /error-msg.php
 ErrorDocument 403 /error-msg.php
 
 <Files .htaccess>
+Order allow,deny
+Deny from all
+</Files>
+
+<Files config_dev>
+Order allow,deny
+Deny from all
+</Files>
+
+<Files config_pdn>
+Order allow,deny
+Deny from all
+</Files>
+
+<Files Connection.php>
+Order allow,deny
+Deny from all
+</Files>
+
+<Files Process.php>
 Order allow,deny
 Deny from all
 </Files>
