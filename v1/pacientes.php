@@ -12,7 +12,7 @@ namespace services\v1;
  *  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  *  * @category Developer
  *  * @package  Vitriapp
- *  * @license  Comercial
+ *  * @license  Commercial
  *
  */
 
@@ -20,82 +20,81 @@ use services\master\Responses;
 use services\master\Patients;
 use services\set\Sets;
 
-require_once __DIR__.'/../set/Sets.php';
-require_once __DIR__.'/../master/Patients.php';
+require_once __DIR__ . '/../set/Sets.php';
+require_once __DIR__ . '/../master/Patients.php';
 
 $responses = new Responses();
 $patients = new Patients();
 
-
-if (Sets::method() === 'GET') {
+if (Sets::method() === Sets::GET_DATA) {
     if (isset($_GET["page"])) {
         $pagina = $_GET["page"];
         $listaPacientes = $patients->listaPacientes($pagina);
-        header("Content-Type: application/json");
+        header(Sets::CONTENT_TYPE_JSON);
         echo json_encode($listaPacientes);
         http_response_code(200);
     } elseif (isset($_GET['id'])) {
         $pacienteid = $_GET['id'];
         $datosPaciente = $patients->obtenerPaciente($pacienteid);
-        header("Content-Type: application/json");
+        header(Sets::CONTENT_TYPE_JSON);
         echo json_encode($datosPaciente);
         http_response_code(200);
     }
-} elseif (Sets::method() === 'POST') {
+} elseif (Sets::method() === Sets::POST_DATA) {
     //recibimos los datos enviados
-    $postBody = file_get_contents("php://input");
+    $information = file_get_contents(Sets::PHP_INPUT);
     //enviamos los datos al manejador
-    $datosArray = $patients->post($postBody);
+    $data_array = $patients->post($information);
     //delvovemos una respuesta
-     header('Content-Type: application/json');
-    if (isset($datosArray["result"]["error_id"])) {
-        $responseCode = $datosArray["result"]["error_id"];
-        http_response_code($responseCode);
+    header(Sets::CONTENT_TYPE_JSON);
+    if (isset($data_array[Sets::RESULT][Sets::ERROR_ID])) {
+        $response_code = $data_array[Sets::RESULT][Sets::ERROR_ID];
+        http_response_code($response_code);
     } else {
         http_response_code(200);
     }
-     echo json_encode($datosArray);
-} elseif (Sets::method() === 'PUT') {
-      //recibimos los datos enviados
-      $postBody = file_get_contents("php://input");
-      //enviamos datos al manejador
-      $datosArray = $patients->put($postBody);
-        //delvovemos una respuesta
-     header('Content-Type: application/json');
-    if (isset($datosArray["result"]["error_id"])) {
-        $responseCode = $datosArray["result"]["error_id"];
-        http_response_code($responseCode);
+    echo json_encode($data_array);
+} elseif (Sets::method() === Sets::PUT_DATA) {
+    //recibimos los datos enviados
+    $information = file_get_contents(Sets::PHP_INPUT);
+    //enviamos datos al manejador
+    $data_array = $patients->put($information);
+    //delvovemos una respuesta
+    header(Sets::CONTENT_TYPE_JSON);
+    if (isset($data_array[Sets::RESULT][Sets::ERROR_ID])) {
+        $response_code = $data_array[Sets::RESULT][Sets::ERROR_ID];
+        http_response_code($response_code);
     } else {
         http_response_code(200);
     }
-     echo json_encode($datosArray);
-} elseif (Sets::method() === 'DELETE') {
-        $headers = getallheaders();
-    if (isset($headers["token"]) && isset($headers["pacienteId"])) {
+    echo json_encode($data_array);
+} elseif (Sets::method() === Sets::DELETE_DATA) {
+    $headers = getallheaders();
+    if (isset($headers[Sets::TOKEN]) && isset($headers["pacienteId"])) {
         //recibimos los datos enviados por el header
-        $send = [
-            "token" => $headers["token"],
-            "pacienteId" =>$headers["pacienteId"]
+        $send_data = [
+            Sets::TOKEN => $headers[Sets::TOKEN],
+            "pacienteId" => $headers["pacienteId"]
         ];
-        $postBody = json_encode($send);
+        $information = json_encode($send_data);
     } else {
         //recibimos los datos enviados
-        $postBody = file_get_contents("php://input");
+        $information = file_get_contents(Sets::PHP_INPUT);
     }
-        
-        //enviamos datos al manejador
-        $datosArray = $patients->delete($postBody);
-        //delvovemos una respuesta
-        header('Content-Type: application/json');
-    if (isset($datosArray["result"]["error_id"])) {
-        $responseCode = $datosArray["result"]["error_id"];
-        http_response_code($responseCode);
+
+    //enviamos datos al manejador
+    $data_array = $patients->delete($information);
+    //delvovemos una respuesta
+    header(Sets::CONTENT_TYPE_JSON);
+    if (isset($data_array[Sets::RESULT][Sets::ERROR_ID])) {
+        $response_code = $data_array[Sets::RESULT][Sets::ERROR_ID];
+        http_response_code($response_code);
     } else {
         http_response_code(200);
     }
-        echo json_encode($datosArray);
+    echo json_encode($data_array);
 } else {
-    header('Content-Type: application/json');
-    $datosArray = $responses->error405();
-    echo json_encode($datosArray);
+    header(Sets::CONTENT_TYPE_JSON);
+    $data_array = $responses->methodNotAllowed();
+    echo json_encode($data_array);
 }

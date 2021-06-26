@@ -12,7 +12,7 @@ namespace services\master\libs;
  *  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  *  * @category Developer
  *  * @package  Vitriapp
- *  * @license  Comercial
+ *  * @license  Commercial
  *
  */
 class Hash

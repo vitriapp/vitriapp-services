@@ -10,13 +10,12 @@ declare(strict_types=1);
  *  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  *  * @category Developer
  *  * @package  Vitriapp
- *  * @license  Comercial
+ *  * @license  Commercial
  *
  */
 
 namespace services\master;
 
-use http\Exception\InvalidArgumentException;
 use services\master\connection\Process;
 use services\set\Sets;
 use services\master\libs\Hash;
@@ -32,51 +31,62 @@ require_once __DIR__ . '/libs/Hash.php';
 class Authentication extends Process
 {
 
-    final public function login($json)
+    /**
+     * @param $json
+     * @return mixed
+     */
+    final public function login(string $json): array
     {
-        $hashes = new Hash();
-        $_respustas = new Responses();
-        $datos = json_decode($json, true);
-        if (!isset($datos['usuario']) || !isset($datos["password"])) {
-            return $_respustas->error_400();
-        } else {
-            $usuario = $datos['usuario'];
-            //$password = bin2hex(sha1(md5(sha1($datos['password']))));
-            $password = $this->encryptData($datos['password']);
-            $datos = $this->getUserData($usuario);
-            if ($datos) {
-                //verificar si la contraseña es igual
-                //if ($password === $datos[0]['Password']) {
-                if (crypt($password, $datos[0]['Password']) === $datos[0]['Password']) {
-                    if ($datos[0]['Estado'] == "Activo") {
-                        //crear el token
-                        $verificar = $this->saveToken($datos[0]['UsuarioId']);
-                        if ($verificar) {
-                            // si se guardo
-                            $result = $_respustas->response;
-                            $result["result"] = array(
-                                "token" => $verificar
-                            );
-                            return $result;
-                        } else {
-                            //error al guardar
-                            return $_respustas->error_500("Error interno, No hemos podido guardar");
-                        }
-                    } else {
-                        //el usuario esta inactivo
-                        return $_respustas->error_200("El usuario esta inactivo");
-                    }
-                } else {
-                    //la contraseña no es igual
-                    return $_respustas->error_200("El password es invalido");
-                }
-            } else {
-                //no existe el usuario
-                return $_respustas->error_200("El usuaro $usuario  no existe ");
-            }
+        $response = new Responses();
+        $array = json_decode($json, true);
+        if (isset($array[Sets::WORD_USER]) || isset($array[Sets::WORD_PASSWORD])) {
+            $password = $this->encryptData($array[Sets::WORD_PASSWORD]);
+            $array = $this->getUserData($array[Sets::WORD_USER]);
+            return $this->validateLogin($password, $array);
         }
+        return $response->formatNotCorrect();
     }
 
+    private function validateLogin(string $password, array $array): array
+    {
+        $response = new Responses();
+        if ($array) {
+            return $this->validatePassword($password, $array);
+        }
+        return $response->incorrectData(Sets::USER_NO_EXIST);
+    }
+
+    private function validatePassword(string $entryPassword, array $array): array
+    {
+        $response = new Responses();
+        if (crypt($entryPassword, $array[0][Sets::WORD_PASSWORD_P]) === $array[0][Sets::WORD_PASSWORD_P]) {
+            return $this->getToken($array[0][Sets::WORD_STATE], $array[0][Sets::USER_ID]);
+        }
+        return $response->incorrectData(Sets::INVALID_PASSWORD);
+    }
+
+    private function getToken(string $state, string $userID): array
+    {
+        $response = new Responses();
+        if ($state === Sets::ACTIVE_A) {
+            return $this->verifySaveToken($userID);
+        }
+        return $response->incorrectData(Sets::INACTIVE_USER);
+    }
+
+    private function verifySaveToken(string $userID): array
+    {
+        $response = new Responses();
+        $verify = $this->saveToken($userID);
+        if ($verify) {
+            $result = $response->response;
+            $result[Sets::RESULT] = [
+                Sets::TOKEN => $verify
+            ];
+            return $result;
+        }
+        return $response->internalError(Sets::INTERNAL_ERROR);
+    }
 
     /**
      * @param $email
@@ -84,7 +94,7 @@ class Authentication extends Process
      */
     private function getUserData(string $email): array
     {
-        $query = "CALL sp_data_access_user('$email' COLLATE utf8_unicode_ci)";
+        $query = "CALL sp_data_access_user('$email')";
         $information = $this->getData($query);
         if (isset($information[0][Sets::USER_ID])) {
             return $information;

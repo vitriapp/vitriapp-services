@@ -52,13 +52,13 @@ class Patients extends Process
         $datos = json_decode($json, true);
 
         if (!isset($datos['token'])) {
-                return $_respuestas->error_401();
+                return $_respuestas->unauthorized();
         } else {
             $this->token = $datos['token'];
             $arrayToken =   $this->buscarToken();
             if ($arrayToken) {
                 if (!isset($datos['nombre']) || !isset($datos['dni']) || !isset($datos['correo'])) {
-                    return $_respuestas->error_400();
+                    return $_respuestas->formatNotCorrect();
                 } else {
                     $this->nombre = $datos['nombre'];
                     $this->dni = $datos['dni'];
@@ -86,11 +86,11 @@ class Patients extends Process
                         );
                         return $respuesta;
                     } else {
-                        return $_respuestas->error_500();
+                        return $_respuestas->internalError();
                     }
                 }
             } else {
-                return $_respuestas->error_401("El Token que envio es invalido o ha caducado");
+                return $_respuestas->unauthorized("El Token que envio es invalido o ha caducado");
             }
         }
     }
@@ -115,13 +115,13 @@ class Patients extends Process
         $datos = json_decode($json, true);
 
         if (!isset($datos['token'])) {
-            return $_respuestas->error_401();
+            return $_respuestas->unauthorized();
         } else {
             $this->token = $datos['token'];
             $arrayToken =   $this->buscarToken();
             if ($arrayToken) {
                 if (!isset($datos['pacienteId'])) {
-                    return $_respuestas->error_400();
+                    return $_respuestas->formatNotCorrect();
                 } else {
                     $this->pacienteid = $datos['pacienteId'];
                     if (isset($datos['nombre'])) {
@@ -157,11 +157,11 @@ class Patients extends Process
                         );
                         return $respuesta;
                     } else {
-                        return $_respuestas->error_500();
+                        return $_respuestas->internalError();
                     }
                 }
             } else {
-                return $_respuestas->error_401("El Token que envio es invalido o ha caducado");
+                return $_respuestas->unauthorized("El Token que envio es invalido o ha caducado");
             }
         }
     }
@@ -187,13 +187,13 @@ class Patients extends Process
         $datos = json_decode($json, true);
 
         if (!isset($datos['token'])) {
-            return $_respuestas->error_401();
+            return $_respuestas->unauthorized();
         } else {
             $this->token = $datos['token'];
             $arrayToken =   $this->buscarToken();
             if ($arrayToken) {
                 if (!isset($datos['pacienteId'])) {
-                    return $_respuestas->error_400();
+                    return $_respuestas->formatNotCorrect();
                 } else {
                     $this->pacienteid = $datos['pacienteId'];
                     $resp = $this->eliminarPaciente();
@@ -204,11 +204,11 @@ class Patients extends Process
                         );
                         return $respuesta;
                     } else {
-                        return $_respuestas->error_500();
+                        return $_respuestas->internalError();
                     }
                 }
             } else {
-                return $_respuestas->error_401("El Token que envio es invalido o ha caducado");
+                return $_respuestas->unauthorized("El Token que envio es invalido o ha caducado");
             }
         }
     }

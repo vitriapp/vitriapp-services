@@ -4,70 +4,62 @@ declare(strict_types=1);
 
 namespace services\master;
 
+use services\set\Sets;
+
 /**
  * Class Response
  */
 class Responses
 {
-    public $response = ['status' => "ok", "result" => []];
+    public $response = [Sets::STATUS => 'OK', Sets::RESULT => []];
 
-    /**
-     * @return array
-     */
-    final public function error405(): array
+    final public function methodNotAllowed(): array
     {
-        $this->response['status'] = "error";
-        $this->response['result'] = [
-            "error_id" => "405",
-            "error_msg" => "Metodo no permitido"
+        $this->response[Sets::STATUS] = Sets::ERROR;
+        $this->response[Sets::RESULT] = [
+            Sets::ERROR_ID => 405,
+            Sets::ERROR_MSG => Sets::METHOD_NOT_ALLOWED
         ];
         return $this->response;
     }
 
-    /**
-     * @param string $valor
-     * @return mixed
-     */
-    final public function error_200(string $valor = 'Datos incorrectos'): array
+    final public function incorrectData(string $valor = Sets::INCORRECT_DATA): array
     {
-        $this->response['status'] = 'error';
-        $this->response['result'] = [
-            'error_id' => '200',
-            'error_msg' => $valor
+        $this->response[Sets::STATUS] = Sets::ERROR;
+        $this->response[Sets::RESULT] = [
+            Sets::ERROR_ID => 200,
+            Sets::ERROR_MSG => $valor
         ];
         return $this->response;
     }
 
-
-    public function error_400()
+    final public function formatNotCorrect(): array
     {
-        $this->response['status'] = "error";
-        $this->response['result'] = array(
-            "error_id" => "400",
-            "error_msg" => "Datos enviados incompletos o con formato incorrecto"
-        );
+        $this->response[Sets::STATUS] = Sets::ERROR;
+        $this->response[Sets::RESULT] = [
+            Sets::ERROR_ID => 400,
+            Sets::ERROR_MSG => Sets::FORMAT_NOT_CORRECT
+        ];
         return $this->response;
     }
 
-
-    public function error_500($valor = "Error interno del servidor")
+    final public function internalError(string $valor = Sets::SERVER_INTERNAL_ERROR): array
     {
-        $this->response['status'] = "error";
-        $this->response['result'] = array(
-            "error_id" => "500",
-            "error_msg" => $valor
-        );
+        $this->response[Sets::STATUS] = Sets::ERROR;
+        $this->response[Sets::RESULT] = [
+            Sets::ERROR_ID => 500,
+            Sets::ERROR_MSG => $valor
+        ];
         return $this->response;
     }
 
-
-    public function error_401($valor = "No autorizado")
+    final public function unauthorized(string $valor = Sets::UNAUTHORIZED): array
     {
-        $this->response['status'] = "error";
-        $this->response['result'] = array(
-            "error_id" => "401",
-            "error_msg" => $valor
-        );
+        $this->response[Sets::STATUS] = Sets::ERROR;
+        $this->response[Sets::RESULT] = [
+            Sets::ERROR_ID => 401,
+            Sets::ERROR_MSG => $valor
+        ];
         return $this->response;
     }
 }

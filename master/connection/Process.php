@@ -8,9 +8,8 @@ declare(strict_types=1);
  *@author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  *@category Developer
  *@package  Vitriapp
- *@license  Comercial
+ *@license  Commercial
  */
-
 
 namespace services\master\connection;
 
@@ -43,7 +42,6 @@ class Process extends Connection
         foreach ($results as $value) {
             $result[] = $value;
         }
-        $this->closeConnect();
         return $this->converterUTF8($result);
     }
 
@@ -63,7 +61,6 @@ class Process extends Connection
         $this->system();
         $this->connect->query($query);
         $rows_data = $this->connect->affected_rows;
-        $this->closeConnect();
         if ($rows_data >= 1) {
             return $this->connect->insert_id;
         }
