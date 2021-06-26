@@ -62,6 +62,10 @@ class Connection extends mysqli
             $this->getDatabase(),
             $this->getPort()
         );
+
+        $this->connect->set_charset('utf8mb4');
+        $this->connect->query('SET NAMES UTF8 COLLATE utf8mb4_spanish_ci');
+        $this->connect->query('SET collation_connection = @@collation_database;');
         return $this->connect;
     }
 
@@ -75,10 +79,5 @@ class Connection extends mysqli
             $json_route = file_get_contents($folder . '/' . Sets::ENVIRONMENT_PRODUCTION);
         }
         return json_decode($json_route, true);
-    }
-
-    final public function closeConnect(): bool
-    {
-        return $this->close();
     }
 }
