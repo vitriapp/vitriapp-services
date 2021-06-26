@@ -4,34 +4,30 @@ declare(strict_types=1);
 
 use services\master\Responses;
 use services\master\Authentication;
+use \services\set\Sets;
 
 require_once __DIR__ . '/master/Authentication.php';
 require_once __DIR__ . '/master/Responses.php';
 
+$authentication = new Authentication();
+$response = new Responses();
 
-$_auth = new Authentication();
-$_respuestas = new Responses();
+if (Sets::method() === Sets::POST_DATA) {
+    $information = file_get_contents(Sets::PHP_INPUT);
 
+    $array = $authentication->login($information);
 
+    header(Sets::CONTENT_TYPE_JSON);
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    //recibir datos
-    $postBody = file_get_contents("php://input");
-
-    //enviamos los datos al manejador
-    $datosArray = $_auth->login($postBody);
-
-    //delvolvemos una respuesta
-    header('Content-Type: application/json');
-    if (isset($datosArray["result"]["error_id"])) {
-        $responseCode = $datosArray["result"]["error_id"];
-        http_response_code((int)$responseCode);
+    if (isset($array[Sets::RESULT][Sets::ERROR_ID])) {
+        $response_code = $array[Sets::RESULT][Sets::ERROR_ID];
+        http_response_code((int)$response_code);
     } else {
         http_response_code(200);
     }
-    echo json_encode($datosArray);
+    echo json_encode($array);
 } else {
-    header('Content-Type: application/json');
-    $datosArray = $_respuestas->error405();
-    echo json_encode($datosArray);
+    header(Sets::CONTENT_TYPE_JSON);
+    $array = $response->methodNotAllowed();
+    echo json_encode($array);
 }
