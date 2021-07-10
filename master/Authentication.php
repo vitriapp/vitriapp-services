@@ -52,8 +52,8 @@ class Authentication extends Process
      * _ValidateLogin
      *
      * This method is useful for validate password for get new token.
+     * Below are the tags commonly used for methods.
      *
-     * Below are the tags commonly used for methods.  A
      * @param string $password the string to password
      * @param array $array data charged from database.
      *
