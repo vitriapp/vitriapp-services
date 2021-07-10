@@ -58,7 +58,7 @@ class Authentication extends Process
      * This method is useful for validate password for get new token.
      *
      * @param string $password the string to password
-     * @param array $array data charged from database.
+     * @param array $array     data charged from database.
      *
      * @return array
      */
@@ -77,7 +77,7 @@ class Authentication extends Process
      * This method is useful for validate password for get new token.
      *
      * @param string $entryPassword the string to password
-     * @param array $array data charged from database.
+     * @param array $array          data charged from database.
      *
      * @return array
      */
@@ -95,7 +95,7 @@ class Authentication extends Process
      *
      * This method is useful for get token through from state and userID
      *
-     * @param string $state state user
+     * @param string $state  state user
      * @param string $userID ID user
      *
      * @return mixed
