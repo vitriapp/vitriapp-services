@@ -47,16 +47,40 @@ class Authentication extends Process
         return $response->formatNotCorrect();
     }
 
+
+    /**
+     * _ValidateLogin
+     *
+     * This method is useful for validate password for get new token.
+     * Below are the tags commonly used for methods.
+     *
+     * @param string $password the string to password
+     * @param array $array data charged from database.
+     *
+     * @return array
+     */
     private function validateLogin(string $password, array $array): array
     {
         $response = new Responses();
         if ($array) {
-            return $this->validatePassword($password, $array);
+            return $this->_validatePassword($password, $array);
         }
         return $response->incorrectData(Sets::USER_NO_EXIST);
     }
 
-    private function validatePassword(string $entryPassword, array $array): array
+
+    /**
+     * _validatePassword
+     *
+     * This method is useful for validate password for get new token.
+     *
+     * Below are the tags commonly used for methods.  A
+     * @param string $entryPassword the string to password
+     * @param array $array data charged from database.
+     *
+     * @return array
+     */
+    private function _validatePassword(string $entryPassword, array $array): array
     {
         $response = new Responses();
         if (crypt($entryPassword, $array[0][Sets::WORD_PASSWORD_P]) === $array[0][Sets::WORD_PASSWORD_P]) {
