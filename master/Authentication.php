@@ -32,34 +32,37 @@ class Authentication extends Process
 {
 
     /**
-     * @param $json
+     * _login
+     *
+     * This method is useful for login for get token.
+     *
+     * @param string $json data charged from database.
+     *
      * @return mixed
      */
-    final public function login(string $json): array
+    final public function _login(string $json): array
     {
         $response = new Responses();
         $array = json_decode($json, true);
         if (isset($array[Sets::WORD_USER]) || isset($array[Sets::WORD_PASSWORD])) {
             $password = $this->encryptData($array[Sets::WORD_PASSWORD]);
-            $array = $this->getUserData($array[Sets::WORD_USER]);
-            return $this->validateLogin($password, $array);
+            $array = $this->_getUserData($array[Sets::WORD_USER]);
+            return $this->_validateLogin($password, $array);
         }
         return $response->formatNotCorrect();
     }
-
 
     /**
      * _ValidateLogin
      *
      * This method is useful for validate password for get new token.
-     * Below are the tags commonly used for methods.
      *
      * @param string $password the string to password
      * @param array $array data charged from database.
      *
      * @return array
      */
-    private function validateLogin(string $password, array $array): array
+    private function _validateLogin(string $password, array $array): array
     {
         $response = new Responses();
         if ($array) {
@@ -68,13 +71,11 @@ class Authentication extends Process
         return $response->incorrectData(Sets::USER_NO_EXIST);
     }
 
-
     /**
      * _validatePassword
      *
      * This method is useful for validate password for get new token.
      *
-     * Below are the tags commonly used for methods.  A
      * @param string $entryPassword the string to password
      * @param array $array data charged from database.
      *
@@ -84,24 +85,43 @@ class Authentication extends Process
     {
         $response = new Responses();
         if (crypt($entryPassword, $array[0][Sets::WORD_PASSWORD_P]) === $array[0][Sets::WORD_PASSWORD_P]) {
-            return $this->getToken($array[0][Sets::WORD_STATE], $array[0][Sets::USER_ID]);
+            return $this->_getToken($array[0][Sets::WORD_STATE], $array[0][Sets::USER_ID]);
         }
         return $response->incorrectData(Sets::INVALID_PASSWORD);
     }
 
-    private function getToken(string $state, string $userID): array
+    /**
+     * _getToken
+     *
+     * This method is useful for get token through from state and userID
+     *
+     * @param string $state state user
+     * @param string $userID ID user
+     *
+     * @return mixed
+     */
+    private function _getToken(string $state, string $userID): array
     {
         $response = new Responses();
         if ($state === Sets::ACTIVE_A) {
-            return $this->verifySaveToken($userID);
+            return $this->_verifySaveToken($userID);
         }
         return $response->incorrectData(Sets::INACTIVE_USER);
     }
 
-    private function verifySaveToken(string $userID): array
+    /**
+     * _verifySaveToken
+     *
+     * This method is useful for get token through from userID
+     *
+     * @param string $userID ID user
+     *
+     * @return mixed
+     */
+    private function _verifySaveToken(string $userID): array
     {
         $response = new Responses();
-        $verify = $this->saveToken($userID);
+        $verify = $this->_saveToken($userID);
         if ($verify) {
             $result = $response->response;
             $result[Sets::RESULT] = [
@@ -113,10 +133,15 @@ class Authentication extends Process
     }
 
     /**
-     * @param $email
+     * _getUserData
+     *
+     * This method is useful for get data access user
+     *
+     * @param string $email email user
+     *
      * @return array|int|mixed
      */
-    private function getUserData(string $email): array
+    private function _getUserData(string $email): array
     {
         $query = "CALL sp_data_access_user('$email')";
         $information = $this->getData($query);
@@ -127,10 +152,15 @@ class Authentication extends Process
     }
 
     /**
-     * @param $userId
+     * _saveToken
+     *
+     * This method is useful for save token generate
+     *
+     * @param string $userId ID user
+     *
      * @return mixed
      */
-    private function saveToken(string $userId): string
+    private function _saveToken(string $userId): string
     {
         $hashes = new Hash();
         $token = bin2hex($hashes->crypt(Sets::SECRET));
