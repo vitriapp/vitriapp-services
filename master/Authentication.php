@@ -27,6 +27,8 @@ require_once __DIR__ . '/libs/Hash.php';
 /**
  * Class Authentication
  *
+ * @category Developer
+ * @package  Vitriapp
  * @author  Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license Commercial PHP License 1.0
  * @link    https://www.vitriapp.com PHP License 1.0
