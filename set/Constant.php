@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
  * @Date:    2021/6/14 0:19:41
+ * @link     https://www.vitriapp.com PHP License 1.0
  */
 
 namespace services\set;
@@ -17,9 +18,10 @@ namespace services\set;
 /**
  * Class Constant
  *
- * @author  Mario Alejandro Benitez Orozco <maalben@gmail.com>
- * @license Commercial PHP License 1.0
- * @link    https://www.vitriapp.com PHP License 1.0
+ * @category Developer
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @license  Commercial PHP License 1.0
+ * @link     https://www.vitriapp.com PHP License 1.0
  */
 class Constant
 {
@@ -66,6 +68,7 @@ class Constant
      *
      * This method return serve name local
      *
+     * @return string | int | mixed
      */
     final public static function environment(): string
     {
@@ -81,6 +84,7 @@ class Constant
      *
      * This method return name method request
      *
+     * @return string | int | mixed
      */
     final public static function method(): string
     {
