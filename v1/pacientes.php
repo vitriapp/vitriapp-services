@@ -25,8 +25,9 @@ require_once __DIR__ . '/../master/Patients.php';
 
 $responses = new Responses();
 $patients = new Patients();
+$constant = new Constant();
 
-if (Constant::method() === Constant::GET_DATA) {
+if ($constant->method() === Constant::GET_DATA) {
     if (isset($_GET["page"])) {
         $pagina = $_GET["page"];
         $listaPacientes = $patients->listaPacientes($pagina);
@@ -40,7 +41,7 @@ if (Constant::method() === Constant::GET_DATA) {
         echo json_encode($datosPaciente);
         http_response_code(200);
     }
-} elseif (Constant::method() === Constant::POST_DATA) {
+} elseif ($constant->method() === Constant::POST_DATA) {
     //recibimos los datos enviados
     $information = file_get_contents(Constant::PHP_INPUT);
     //enviamos los datos al manejador
@@ -54,7 +55,7 @@ if (Constant::method() === Constant::GET_DATA) {
         http_response_code(200);
     }
     echo json_encode($data_array);
-} elseif (Constant::method() === Constant::PUT_DATA) {
+} elseif ($constant->method() === Constant::PUT_DATA) {
     //recibimos los datos enviados
     $information = file_get_contents(Constant::PHP_INPUT);
     //enviamos datos al manejador
@@ -68,7 +69,7 @@ if (Constant::method() === Constant::GET_DATA) {
         http_response_code(200);
     }
     echo json_encode($data_array);
-} elseif (Constant::method() === Constant::DELETE_DATA) {
+} elseif ($constant->method() === Constant::DELETE_DATA) {
     $headers = getallheaders();
     if (isset($headers[Constant::TOKEN]) && isset($headers["pacienteId"])) {
         //recibimos los datos enviados por el header

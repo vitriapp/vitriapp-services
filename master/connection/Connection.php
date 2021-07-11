@@ -20,9 +20,11 @@ use services\set\Constant;
 /**
  * Class Connection
  *
- * @author  Mario Alejandro Benitez Orozco <maalben@gmail.com>
- * @license Commercial PHP License 1.0
- * @link    https://www.vitriapp.com PHP License 1.0
+ * @category Developer
+ * @package  Vitriapp
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @license  Commercial PHP License 1.0
+ * @link     https://www.vitriapp.com PHP License 1.0
  */
 class Connection extends mysqli
 {
@@ -34,7 +36,7 @@ class Connection extends mysqli
     protected $connect;
 
     /**
-     * getServer
+     * Get Server
      *
      * This method return server connection
      *
@@ -46,7 +48,7 @@ class Connection extends mysqli
     }
 
     /**
-     * getUser
+     * Get User
      *
      * This method return user connection
      *
@@ -58,7 +60,7 @@ class Connection extends mysqli
     }
 
     /**
-     * getPassword
+     * Get Password
      *
      * This method return password connection
      *
@@ -70,7 +72,7 @@ class Connection extends mysqli
     }
 
     /**
-     * getDatabase
+     * Get Database
      *
      * This method return name database connection
      *
@@ -82,7 +84,7 @@ class Connection extends mysqli
     }
 
     /**
-     * getPort
+     * Get Port
      *
      * This method return port database connection
      *
@@ -94,7 +96,7 @@ class Connection extends mysqli
     }
 
     /**
-     * system
+     * System
      *
      * This method return connection
      *
@@ -126,7 +128,7 @@ class Connection extends mysqli
     }
 
     /**
-     * connectionData
+     * Connection Data
      *
      * This method return data connection with json format
      *
@@ -134,9 +136,9 @@ class Connection extends mysqli
      */
     private function connectionData(): array
     {
-
+        $constant = new Constant();
         $folder = __DIR__;
-        if (Constant::environment() === Constant::LOCALHOST) {
+        if ($constant->environment() === Constant::LOCALHOST) {
             $json_route = file_get_contents($folder . '/' . Constant::CONFIG_DEV);
         } else {
             $json_route = file_get_contents($folder . '/' . Constant::CONFIG_PDN);
