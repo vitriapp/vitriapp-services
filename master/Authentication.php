@@ -15,12 +15,12 @@ declare(strict_types=1);
 namespace services\master;
 
 use services\master\connection\Process;
-use services\set\Servicesset;
+use services\set\Constant;
 use services\master\libs\Hash;
 
 require_once __DIR__ . '/connection/Process.php';
 require_once __DIR__ . '/Responses.php';
-require_once __DIR__ . '/../set/Servicesset.php';
+require_once __DIR__ . '/../set/Constant.php';
 require_once __DIR__ . '/libs/Hash.php';
 
 /**
@@ -47,9 +47,9 @@ class Authentication
         $process = new Process();
         $response = new Responses();
         $array = json_decode($json, true);
-        if (isset($array[Servicesset::WORD_USER]) || isset($array[Servicesset::WORD_PASSWORD])) {
-            $password = $process->encryptData($array[Servicesset::WORD_PASSWORD]);
-            $array = $this->getUserData($array[Servicesset::WORD_USER]);
+        if (isset($array[Constant::WORD_USER]) || isset($array[Constant::WORD_PASSWORD])) {
+            $password = $process->encryptData($array[Constant::WORD_PASSWORD]);
+            $array = $this->getUserData($array[Constant::WORD_USER]);
             return $this->validateLogin($password, $array);
         }
         return $response->formatNotCorrect();
@@ -71,7 +71,7 @@ class Authentication
         if ($array) {
             return $this->validatePassword($password, $array);
         }
-        return $response->incorrectData(Servicesset::USER_NO_EXIST);
+        return $response->incorrectData(Constant::USER_NO_EXIST);
     }
 
     /**
@@ -87,11 +87,11 @@ class Authentication
     private function validatePassword(string $password, array $array): array
     {
         $response = new Responses();
-        $codes = Servicesset::USER_ID;
-        if (crypt($password, $array[0][Servicesset::W_PASS]) === $array[0][Servicesset::W_PASS]) {
-            return $this->getToken($array[0][Servicesset::W_STATE], $array[0][$codes]);
+        $codes = Constant::USER_ID;
+        if (crypt($password, $array[0][Constant::W_PASS]) === $array[0][Constant::W_PASS]) {
+            return $this->getToken($array[0][Constant::W_STATE], $array[0][$codes]);
         }
-        return $response->incorrectData(Servicesset::INVALID_PASSWORD);
+        return $response->incorrectData(Constant::INVALID_PASSWORD);
     }
 
     /**
@@ -107,10 +107,10 @@ class Authentication
     private function getToken(string $state, string $userID): array
     {
         $response = new Responses();
-        if ($state === Servicesset::ACTIVE_A) {
+        if ($state === Constant::ACTIVE_A) {
             return $this->verifySaveToken($userID);
         }
-        return $response->incorrectData(Servicesset::INACTIVE_USER);
+        return $response->incorrectData(Constant::INACTIVE_USER);
     }
 
     /**
@@ -128,12 +128,12 @@ class Authentication
         $verify = $this->saveToken($userID);
         if ($verify) {
             $result = $response->response;
-            $result[Servicesset::RESULT] = [
-                Servicesset::TOKEN => $verify
+            $result[Constant::RESULT] = [
+                Constant::TOKEN => $verify
             ];
             return $result;
         }
-        return $response->internalError(Servicesset::INTERNAL_ERROR);
+        return $response->internalError(Constant::INTERNAL_ERROR);
     }
 
     /**
@@ -150,7 +150,7 @@ class Authentication
         $process = new Process();
         $query = "CALL sp_data_access_user('$email')";
         $information = $process->getData($query);
-        if (isset($information[0][Servicesset::USER_ID])) {
+        if (isset($information[0][Constant::USER_ID])) {
             return $information;
         }
         return 0;
@@ -169,9 +169,9 @@ class Authentication
     {
         $process = new Process();
         $hashes = new Hash();
-        $token = bin2hex($hashes->crypt(Servicesset::SECRET));
+        $token = bin2hex($hashes->crypt(Constant::SECRET));
         $generate = date('Y-m-d H:i');
-        $state = Servicesset::ACTIVE;
+        $state = Constant::ACTIVE;
         $query = "CALL sp_save_token('$userId','$token','$state','$generate')";
         if ($process->nonQuery($query)) {
             return $token;
