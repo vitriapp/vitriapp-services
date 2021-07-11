@@ -48,7 +48,7 @@ class Authentication extends Process
         $array = json_decode($json, true);
         if (isset($array[Sets::WORD_USER]) || isset($array[Sets::WORD_PASSWORD])) {
             $password = $this->encryptData($array[Sets::WORD_PASSWORD]);
-            $array = $this->_getUserData($array[Sets::WORD_USER]);
+            $array = $this->getUserData($array[Sets::WORD_USER]);
             return $this->validateLogin($password, $array);
         }
         return $response->formatNotCorrect();
@@ -68,7 +68,7 @@ class Authentication extends Process
     {
         $response = new Responses();
         if ($array) {
-            return $this->_validatePassword($password, $array);
+            return $this->validatePassword($password, $array);
         }
         return $response->incorrectData(Sets::USER_NO_EXIST);
     }
@@ -83,12 +83,12 @@ class Authentication extends Process
      *
      * @return mixed
      */
-    private function _validatePassword(string $password, array $array): array
+    private function validatePassword(string $password, array $array): array
     {
         $response = new Responses();
         $codes = Sets::USER_ID;
         if (crypt($password, $array[0][Sets::W_PASS]) === $array[0][Sets::W_PASS]) {
-            return $this->_getToken($array[0][Sets::W_STATE], $array[0][$codes]);
+            return $this->getToken($array[0][Sets::W_STATE], $array[0][$codes]);
         }
         return $response->incorrectData(Sets::INVALID_PASSWORD);
     }
@@ -103,11 +103,11 @@ class Authentication extends Process
      *
      * @return mixed
      */
-    private function _getToken(string $state, string $userID): array
+    private function getToken(string $state, string $userID): array
     {
         $response = new Responses();
         if ($state === Sets::ACTIVE_A) {
-            return $this->_verifySaveToken($userID);
+            return $this->verifySaveToken($userID);
         }
         return $response->incorrectData(Sets::INACTIVE_USER);
     }
@@ -121,10 +121,10 @@ class Authentication extends Process
      *
      * @return mixed
      */
-    private function _verifySaveToken(string $userID): array
+    private function verifySaveToken(string $userID): array
     {
         $response = new Responses();
-        $verify = $this->_saveToken($userID);
+        $verify = $this->saveToken($userID);
         if ($verify) {
             $result = $response->response;
             $result[Sets::RESULT] = [
@@ -144,7 +144,7 @@ class Authentication extends Process
      *
      * @return array|int|mixed
      */
-    private function _getUserData(string $email): array
+    private function getUserData(string $email): array
     {
         $query = "CALL sp_data_access_user('$email')";
         $information = $this->getData($query);
@@ -163,7 +163,7 @@ class Authentication extends Process
      *
      * @return mixed
      */
-    private function _saveToken(string $userId): string
+    private function saveToken(string $userId): string
     {
         $hashes = new Hash();
         $token = bin2hex($hashes->crypt(Sets::SECRET));
