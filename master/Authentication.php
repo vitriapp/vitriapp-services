@@ -49,7 +49,7 @@ class Authentication extends Process
         if (isset($array[Sets::WORD_USER]) || isset($array[Sets::WORD_PASSWORD])) {
             $password = $this->encryptData($array[Sets::WORD_PASSWORD]);
             $array = $this->_getUserData($array[Sets::WORD_USER]);
-            return $this->validateLogin($password, $array);
+            return $this->_ValidateLogin($password, $array);
         }
         return $response->formatNotCorrect();
     }
@@ -64,7 +64,7 @@ class Authentication extends Process
      *
      * @return mixed
      */
-    private function validateLogin(string $password, array $array): array
+    private function _ValidateLogin(string $password, array $array): array
     {
         $response = new Responses();
         if ($array) {
