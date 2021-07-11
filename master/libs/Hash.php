@@ -2,25 +2,36 @@
 
 declare(strict_types=1);
 
+/**
+ * PHP version 7.4
+ *
+ * @category Developer
+ * @package  Vitriapp
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @license  Commercial PHP License 1.0
+ * @Date:    2021/6/15 1:27:43
+ */
+
 namespace services\master\libs;
 
 /**
- * *
- *  * PHP version 7.4
- *  *
- *  * @Date: 2021/6/15 1:27:43
- *  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
- *  * @category Developer
- *  * @package  Vitriapp
- *  * @license  Commercial
+ * Class Hash
  *
+ * @author  Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @license Commercial PHP License 1.0
+ * @link    https://www.vitriapp.com PHP License 1.0
  */
 class Hash
 {
 
     /**
-     * @param string $input
-     * @param int $rounds
+     * crypt
+     *
+     * This method is useful for crypt password and token.
+     *
+     * @param string $input data for crypt words.
+     * @param int $rounds   rounds for crypt words.
+     *
      * @return mixed
      */
     final public function crypt(string $input, int $rounds = 8): string

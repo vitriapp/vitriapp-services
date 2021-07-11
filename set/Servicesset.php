@@ -17,10 +17,10 @@ declare(strict_types=1);
 namespace services\set;
 
 /**
- * Class Sets
+ * Class Servicesset
  * @package services\set
  */
-class Sets
+class Servicesset
 {
     public const LOCALHOST = 'localhost';
     public const ENVIRONMENT_DEVELOP = 'config_dev';
