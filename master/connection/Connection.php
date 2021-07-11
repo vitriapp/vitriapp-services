@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace services\master\connection;
 
 use mysqli;
-use services\set\Servicesset;
+use services\set\Constant;
 
 /**
  * Class Connection
@@ -98,11 +98,11 @@ class Connection extends mysqli
     {
         $array_data = $this->connectionData();
         foreach ($array_data as $value) {
-            $this->server = $value[Servicesset::SERVER];
-            $this->user = $value[Servicesset::USER_DATABASE];
-            $this->password = $value[Servicesset::PASSWORD];
-            $this->database = $value[Servicesset::DATABASE];
-            $this->port = $value[Servicesset::PORT_MYSQL];
+            $this->server = $value[Constant::SERVER];
+            $this->user = $value[Constant::USER_DATABASE];
+            $this->password = $value[Constant::PASSWORD];
+            $this->database = $value[Constant::DATABASE];
+            $this->port = $value[Constant::PORT_MYSQL];
         }
 
         $this->connect = new mysqli(
@@ -129,10 +129,10 @@ class Connection extends mysqli
     {
 
         $folder = __DIR__;
-        if (Servicesset::environment() === Servicesset::LOCALHOST) {
-            $json_route = file_get_contents($folder . '/' . Servicesset::ENVIRONMENT_DEVELOP);
+        if (Constant::environment() === Constant::LOCALHOST) {
+            $json_route = file_get_contents($folder . '/' . Constant::ENVIRONMENT_DEVELOP);
         } else {
-            $json_route = file_get_contents($folder . '/' . Servicesset::ENVIRONMENT_PRODUCTION);
+            $json_route = file_get_contents($folder . '/' . Constant::ENVIRONMENT_PRODUCTION);
         }
         return json_decode($json_route, true);
     }
