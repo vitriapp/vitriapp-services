@@ -40,7 +40,7 @@ class Authentication extends Process
      *
      * @return mixed
      */
-    final public function _login(string $json): array
+    final public function login(string $json): array
     {
         $response = new Responses();
         $array = json_decode($json, true);
@@ -58,7 +58,7 @@ class Authentication extends Process
      * This method is useful for validate password for get new token.
      *
      * @param string $password the string to password
-     * @param array $array     data charged from database.
+     * @param array $array    data charged from database.
      *
      * @return array
      */
@@ -76,16 +76,17 @@ class Authentication extends Process
      *
      * This method is useful for validate password for get new token.
      *
-     * @param string $entryPassword the string to password
-     * @param array $array          data charged from database.
+     * @param string $password the string to password
+     * @param array $array    data charged from database.
      *
      * @return array
      */
-    private function _validatePassword(string $entryPassword, array $array): array
+    private function _validatePassword(string $password, array $array): array
     {
         $response = new Responses();
-        if (crypt($entryPassword, $array[0][Sets::WORD_PASSWORD_P]) === $array[0][Sets::WORD_PASSWORD_P]) {
-            return $this->_getToken($array[0][Sets::WORD_STATE], $array[0][Sets::USER_ID]);
+        $codes = Sets::USER_ID;
+        if (crypt($password, $array[0][Sets::W_PASS]) === $array[0][Sets::W_PASS]) {
+            return $this->_getToken($array[0][Sets::W_STATE], $array[0][$codes]);
         }
         return $response->incorrectData(Sets::INVALID_PASSWORD);
     }

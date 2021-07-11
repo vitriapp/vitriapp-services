@@ -15,7 +15,7 @@ $response = new Responses();
 if (Sets::method() === Sets::POST_DATA) {
     $information = file_get_contents(Sets::PHP_INPUT);
 
-    $array = $authentication->_login($information);
+    $array = $authentication->login($information);
 
     header(Sets::CONTENT_TYPE_JSON);
 
