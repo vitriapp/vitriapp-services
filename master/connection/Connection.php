@@ -38,6 +38,7 @@ class Connection extends mysqli
      *
      * This method return server connection
      *
+     * @return string | int | mixed
      */
     final public function getServer(): string
     {
@@ -49,6 +50,7 @@ class Connection extends mysqli
      *
      * This method return user connection
      *
+     * @return string | int | mixed
      */
     final public function getUser(): string
     {
@@ -60,6 +62,7 @@ class Connection extends mysqli
      *
      * This method return password connection
      *
+     * @return string | int | mixed
      */
     final public function getPassword(): string
     {
@@ -71,6 +74,7 @@ class Connection extends mysqli
      *
      * This method return name database connection
      *
+     * @return string | int | mixed
      */
     final public function getDatabase(): string
     {
@@ -82,6 +86,7 @@ class Connection extends mysqli
      *
      * This method return port database connection
      *
+     * @return string | int | mixed
      */
     final public function getPort(): int
     {
@@ -93,6 +98,7 @@ class Connection extends mysqli
      *
      * This method return connection
      *
+     * @return string | int | mixed
      */
     final public function system(): mysqli
     {
@@ -124,6 +130,7 @@ class Connection extends mysqli
      *
      * This method return data connection with json format
      *
+     * @return string | int | mixed
      */
     private function connectionData(): array
     {
