@@ -3,15 +3,13 @@
 declare(strict_types=1);
 
 /**
- * *
- *  * PHP version 7.4
- *  *
- *  * @Date: 2021/6/14 0:19:41
- *  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
- *  * @category Developer
- *  * @package  Vitriapp
- *  * @license  Commercial
+ * PHP version 7.4
  *
+ * @Date: 2021/6/14 0:19:41
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @category Developer
+ * @package  Vitriapp
+ * @license  Commercial
  */
 
 namespace services\master;
@@ -27,6 +25,9 @@ require_once __DIR__ . '/libs/Hash.php';
 
 /**
  * Class auth
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @link     https://www.vitriapp.com
+ * @license  Commercial
  */
 class Authentication extends Process
 {
@@ -58,7 +59,7 @@ class Authentication extends Process
      * This method is useful for validate password for get new token.
      *
      * @param string $password the string to password
-     * @param array $array    data charged from database.
+     * @param array  $array    data charged from database.
      *
      * @return array
      */
@@ -77,7 +78,7 @@ class Authentication extends Process
      * This method is useful for validate password for get new token.
      *
      * @param string $password the string to password
-     * @param array $array    data charged from database.
+     * @param array  $array    data charged from database.
      *
      * @return array
      */
