@@ -73,7 +73,11 @@ class Constant
      */
     final public function environment(): string
     {
-        $servername = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING);
+        $servername = filter_input(
+            INPUT_SERVER,
+            'SERVER_NAME',
+            FILTER_SANITIZE_STRING
+        );
         if ($servername === 'localhost') {
             return 'localhost';
         }
@@ -89,7 +93,11 @@ class Constant
      */
     final public function method(): string
     {
-        $value = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING);
+        $value = filter_input(
+            INPUT_SERVER,
+            'REQUEST_METHOD',
+            FILTER_SANITIZE_STRING
+        );
         if (empty($value)) {
             return '';
         }
