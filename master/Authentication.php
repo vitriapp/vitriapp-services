@@ -34,7 +34,7 @@ class Authentication
 {
 
     /**
-     * login
+     * Login
      *
      * This method is useful for login for get token.
      *
@@ -47,16 +47,17 @@ class Authentication
         $process = new Process();
         $response = new Responses();
         $array = json_decode($json, true);
-        if (isset($array[Constant::WORD_USER]) || isset($array[Constant::WORD_PASSWORD])) {
-            $password = $process->encryptData($array[Constant::WORD_PASSWORD]);
-            $array = $this->getUserData($array[Constant::WORD_USER]);
+        $text_password = Constant::W_PASSWORD;
+        if (isset($array[Constant::W_USER]) || isset($array[$text_password])) {
+            $password = $process->encryptData($array[Constant::W_PASSWORD]);
+            $array = $this->getUserData($array[Constant::W_USER]);
             return $this->validateLogin($password, $array);
         }
         return $response->formatNotCorrect();
     }
 
     /**
-     * validateLogin
+     * Validate login
      *
      * This method is useful for validate password for get new token.
      *
@@ -75,7 +76,7 @@ class Authentication
     }
 
     /**
-     * validatePassword
+     * Validate password
      *
      * This method is useful for validate password for get new token.
      *
@@ -88,14 +89,15 @@ class Authentication
     {
         $response = new Responses();
         $codes = Constant::USER_ID;
-        if (crypt($password, $array[0][Constant::W_PASS]) === $array[0][Constant::W_PASS]) {
+        $text_pass = Constant::W_PASS;
+        if (crypt($password, $array[0][$text_pass]) === $array[0][$text_pass]) {
             return $this->getToken($array[0][Constant::W_STATE], $array[0][$codes]);
         }
         return $response->incorrectData(Constant::INVALID_PASSWORD);
     }
 
     /**
-     * getToken
+     * Get token
      *
      * This method is useful for get token through from state and userID
      *
@@ -114,7 +116,7 @@ class Authentication
     }
 
     /**
-     * verifySaveToken
+     * Verify save token
      *
      * This method is useful for get token through from userID
      *
@@ -137,7 +139,7 @@ class Authentication
     }
 
     /**
-     * getUserData
+     * Get user data
      *
      * This method is useful for get data access user
      *
@@ -157,7 +159,7 @@ class Authentication
     }
 
     /**
-     * saveToken
+     * Save token
      *
      * This method is useful for save token generate
      *

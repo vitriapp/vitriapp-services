@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
  * @Date:    2021/6/15 1:27:43
+ * @link    https://www.vitriapp.com PHP License 1.0
  */
 
 namespace services\master\libs;
@@ -25,12 +26,12 @@ class Hash
 {
 
     /**
-     * crypt
+     * Crypt
      *
      * This method is useful for crypt password and token.
      *
-     * @param string $input data for crypt words.
-     * @param int $rounds   rounds for crypt words.
+     * @param string $input  data for crypt words.
+     * @param int    $rounds rounds for crypt words.
      *
      * @return mixed
      */
