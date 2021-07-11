@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
  * @Date:    2021/6/15 1:27:43
+ * @link     https://www.vitriapp.com PHP License 1.0
  */
 
 namespace services\master\connection;
@@ -139,10 +140,11 @@ class Connection extends mysqli
         $constant = new Constant();
         $folder = __DIR__;
         if ($constant->environment() === Constant::LOCALHOST) {
-            $json_route = file_get_contents($folder . '/' . Constant::CONFIG_DEV);
+            $json_file = Constant::CONFIG_DEV;
         } else {
-            $json_route = file_get_contents($folder . '/' . Constant::CONFIG_PDN);
+            $json_file = Constant::CONFIG_PDN;
         }
+        $json_route = file_get_contents($folder . '/' . $json_file);
         return json_decode($json_route, true);
     }
 }
