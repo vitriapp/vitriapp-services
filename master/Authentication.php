@@ -15,16 +15,16 @@ declare(strict_types=1);
 namespace services\master;
 
 use services\master\connection\Process;
-use services\set\Sets;
+use services\set\Servicesset;
 use services\master\libs\Hash;
 
 require_once __DIR__ . '/connection/Process.php';
 require_once __DIR__ . '/Responses.php';
-require_once __DIR__ . '/../set/Sets.php';
+require_once __DIR__ . '/../set/Servicesset.php';
 require_once __DIR__ . '/libs/Hash.php';
 
 /**
- * Class auth
+ * Class Authentication
  *
  * @author  Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license Commercial PHP License 1.0
@@ -34,7 +34,7 @@ class Authentication
 {
 
     /**
-     * _login
+     * login
      *
      * This method is useful for login for get token.
      *
@@ -47,16 +47,16 @@ class Authentication
         $process = new Process();
         $response = new Responses();
         $array = json_decode($json, true);
-        if (isset($array[Sets::WORD_USER]) || isset($array[Sets::WORD_PASSWORD])) {
-            $password = $process->encryptData($array[Sets::WORD_PASSWORD]);
-            $array = $this->getUserData($array[Sets::WORD_USER]);
+        if (isset($array[Servicesset::WORD_USER]) || isset($array[Servicesset::WORD_PASSWORD])) {
+            $password = $process->encryptData($array[Servicesset::WORD_PASSWORD]);
+            $array = $this->getUserData($array[Servicesset::WORD_USER]);
             return $this->validateLogin($password, $array);
         }
         return $response->formatNotCorrect();
     }
 
     /**
-     * _ValidateLogin
+     * validateLogin
      *
      * This method is useful for validate password for get new token.
      *
@@ -71,11 +71,11 @@ class Authentication
         if ($array) {
             return $this->validatePassword($password, $array);
         }
-        return $response->incorrectData(Sets::USER_NO_EXIST);
+        return $response->incorrectData(Servicesset::USER_NO_EXIST);
     }
 
     /**
-     * _validatePassword
+     * validatePassword
      *
      * This method is useful for validate password for get new token.
      *
@@ -87,15 +87,15 @@ class Authentication
     private function validatePassword(string $password, array $array): array
     {
         $response = new Responses();
-        $codes = Sets::USER_ID;
-        if (crypt($password, $array[0][Sets::W_PASS]) === $array[0][Sets::W_PASS]) {
-            return $this->getToken($array[0][Sets::W_STATE], $array[0][$codes]);
+        $codes = Servicesset::USER_ID;
+        if (crypt($password, $array[0][Servicesset::W_PASS]) === $array[0][Servicesset::W_PASS]) {
+            return $this->getToken($array[0][Servicesset::W_STATE], $array[0][$codes]);
         }
-        return $response->incorrectData(Sets::INVALID_PASSWORD);
+        return $response->incorrectData(Servicesset::INVALID_PASSWORD);
     }
 
     /**
-     * _getToken
+     * getToken
      *
      * This method is useful for get token through from state and userID
      *
@@ -107,14 +107,14 @@ class Authentication
     private function getToken(string $state, string $userID): array
     {
         $response = new Responses();
-        if ($state === Sets::ACTIVE_A) {
+        if ($state === Servicesset::ACTIVE_A) {
             return $this->verifySaveToken($userID);
         }
-        return $response->incorrectData(Sets::INACTIVE_USER);
+        return $response->incorrectData(Servicesset::INACTIVE_USER);
     }
 
     /**
-     * _verifySaveToken
+     * verifySaveToken
      *
      * This method is useful for get token through from userID
      *
@@ -128,16 +128,16 @@ class Authentication
         $verify = $this->saveToken($userID);
         if ($verify) {
             $result = $response->response;
-            $result[Sets::RESULT] = [
-                Sets::TOKEN => $verify
+            $result[Servicesset::RESULT] = [
+                Servicesset::TOKEN => $verify
             ];
             return $result;
         }
-        return $response->internalError(Sets::INTERNAL_ERROR);
+        return $response->internalError(Servicesset::INTERNAL_ERROR);
     }
 
     /**
-     * _getUserData
+     * getUserData
      *
      * This method is useful for get data access user
      *
@@ -150,14 +150,14 @@ class Authentication
         $process = new Process();
         $query = "CALL sp_data_access_user('$email')";
         $information = $process->getData($query);
-        if (isset($information[0][Sets::USER_ID])) {
+        if (isset($information[0][Servicesset::USER_ID])) {
             return $information;
         }
         return 0;
     }
 
     /**
-     * _saveToken
+     * saveToken
      *
      * This method is useful for save token generate
      *
@@ -169,9 +169,9 @@ class Authentication
     {
         $process = new Process();
         $hashes = new Hash();
-        $token = bin2hex($hashes->crypt(Sets::SECRET));
+        $token = bin2hex($hashes->crypt(Servicesset::SECRET));
         $generate = date('Y-m-d H:i');
-        $state = Sets::ACTIVE;
+        $state = Servicesset::ACTIVE;
         $query = "CALL sp_save_token('$userId','$token','$state','$generate')";
         if ($process->nonQuery($query)) {
             return $token;
