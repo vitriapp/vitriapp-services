@@ -30,7 +30,7 @@ require_once __DIR__ . '/libs/Hash.php';
  * @license Commercial PHP License 1.0
  * @link    https://www.vitriapp.com PHP License 1.0
  */
-class Authentication extends Process
+class Authentication
 {
 
     /**
@@ -44,10 +44,11 @@ class Authentication extends Process
      */
     final public function login(string $json): array
     {
+        $process = new Process();
         $response = new Responses();
         $array = json_decode($json, true);
         if (isset($array[Sets::WORD_USER]) || isset($array[Sets::WORD_PASSWORD])) {
-            $password = $this->encryptData($array[Sets::WORD_PASSWORD]);
+            $password = $process->encryptData($array[Sets::WORD_PASSWORD]);
             $array = $this->getUserData($array[Sets::WORD_USER]);
             return $this->validateLogin($password, $array);
         }
@@ -146,8 +147,9 @@ class Authentication extends Process
      */
     private function getUserData(string $email): array
     {
+        $process = new Process();
         $query = "CALL sp_data_access_user('$email')";
-        $information = $this->getData($query);
+        $information = $process->getData($query);
         if (isset($information[0][Sets::USER_ID])) {
             return $information;
         }
@@ -165,12 +167,13 @@ class Authentication extends Process
      */
     private function saveToken(string $userId): string
     {
+        $process = new Process();
         $hashes = new Hash();
         $token = bin2hex($hashes->crypt(Sets::SECRET));
         $generate = date('Y-m-d H:i');
         $state = Sets::ACTIVE;
         $query = "CALL sp_save_token('$userId','$token','$state','$generate')";
-        if ($this->nonQuery($query)) {
+        if ($process->nonQuery($query)) {
             return $token;
         }
         return '0';
