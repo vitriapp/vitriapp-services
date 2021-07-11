@@ -36,8 +36,8 @@ class Sets
     public const SECRET = 'Aa10Bb2D0z34MGTPp';
     public const WORD_USER = 'usuario';
     public const WORD_PASSWORD = 'password';
-    public const WORD_PASSWORD_P = 'Password';
-    public const WORD_STATE = 'Estado';
+    public const W_PASS = 'Password';
+    public const W_STATE = 'Estado';
     public const RESULT = 'result';
     public const TOKEN = 'token';
     public const USER_NO_EXIST = 'El usuario no existe';
