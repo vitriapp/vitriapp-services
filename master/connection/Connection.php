@@ -142,8 +142,8 @@ class Connection extends mysqli
         $environment = $constant->environment();
         $localhost = Constant::LOCALHOST;
         $develop =  Constant::CONFIG_DEV;
-        $json_file = $environment === $localhost ? $develop : Constant::CONFIG_PDN;
-        $json_route = file_get_contents($folder . '/' . $json_file);
-        return json_decode($json_route, true);
+        $connection = $environment === $localhost ? $develop : Constant::CONFIG_PDN;
+        $route = file_get_contents($folder . '/' . $connection);
+        return json_decode($route, true);
     }
 }
