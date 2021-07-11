@@ -130,9 +130,9 @@ class Connection extends mysqli
 
         $folder = __DIR__;
         if (Constant::environment() === Constant::LOCALHOST) {
-            $json_route = file_get_contents($folder . '/' . Constant::ENVIRONMENT_DEVELOP);
+            $json_route = file_get_contents($folder . '/' . Constant::CONFIG_DEV);
         } else {
-            $json_route = file_get_contents($folder . '/' . Constant::ENVIRONMENT_PRODUCTION);
+            $json_route = file_get_contents($folder . '/' . Constant::CONFIG_PDN);
         }
         return json_decode($json_route, true);
     }
