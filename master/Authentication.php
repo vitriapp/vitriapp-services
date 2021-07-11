@@ -6,10 +6,10 @@ declare(strict_types=1);
  * PHP version 7.4
  *
  * @category Developer
+ * @package  Vitriapp
  * @license  Commercial PHP License 1.0
  * @Date:    2021/6/14 0:19:41
- * @package  Vitriapp
- * @author  Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  */
 
 namespace services\master;
@@ -27,8 +27,8 @@ require_once __DIR__ . '/libs/Hash.php';
  * Class auth
  *
  * @author  Mario Alejandro Benitez Orozco <maalben@gmail.com>
- * @link    https://www.vitriapp.com PHP License 1.0
  * @license Commercial PHP License 1.0
+ * @link    https://www.vitriapp.com PHP License 1.0
  */
 class Authentication extends Process
 {
