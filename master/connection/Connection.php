@@ -103,7 +103,7 @@ class Connection extends mysqli
      *
      * @return string | int | mixed
      */
-    final public function system(): mysqli
+    final public function systemAccess(): mysqli
     {
         $array_data = $this->connectionData();
         foreach ($array_data as $value) {
