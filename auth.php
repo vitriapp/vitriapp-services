@@ -11,8 +11,9 @@ require_once __DIR__ . '/master/Responses.php';
 
 $authentication = new Authentication();
 $response = new Responses();
+$constant = new Constant();
 
-if (Constant::method() === Constant::POST_DATA) {
+if ($constant->method() === Constant::POST_DATA) {
     $information = file_get_contents(Constant::PHP_INPUT);
 
     $array = $authentication->login($information);

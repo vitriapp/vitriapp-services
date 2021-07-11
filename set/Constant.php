@@ -19,6 +19,7 @@ namespace services\set;
  * Class Constant
  *
  * @category Developer
+ * @package  Vitriapp
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
@@ -70,7 +71,7 @@ class Constant
      *
      * @return string | int | mixed
      */
-    final public static function environment(): string
+    final public function environment(): string
     {
         $servername = $_SERVER['SERVER_NAME'];
         if ($servername === 'localhost') {
@@ -86,7 +87,7 @@ class Constant
      *
      * @return string | int | mixed
      */
-    final public static function method(): string
+    final public function method(): string
     {
         return $_SERVER['REQUEST_METHOD'];
     }
