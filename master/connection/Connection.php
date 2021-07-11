@@ -139,11 +139,10 @@ class Connection extends mysqli
     {
         $constant = new Constant();
         $folder = __DIR__;
-        if ($constant->environment() === Constant::LOCALHOST) {
-            $json_file = Constant::CONFIG_DEV;
-        } else {
-            $json_file = Constant::CONFIG_PDN;
-        }
+        $environment = $constant->environment();
+        $localhost = Constant::LOCALHOST;
+        $develop =  Constant::CONFIG_DEV;
+        $json_file = $environment === $localhost ? $develop : Constant::CONFIG_PDN;
         $json_route = file_get_contents($folder . '/' . $json_file);
         return json_decode($json_route, true);
     }
