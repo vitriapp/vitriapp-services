@@ -53,10 +53,10 @@ class Constant
     public const STATUS = 'status';
     public const ERROR = 'error';
     public const METHOD_NOT_ALLOWED = 'Metodo no permitido';
-    public const INCORRECT_DATA = 'Datos incorrectos';
+    public const INCORRECT = 'Datos incorrectos';
     public const FORMAT_NOT_CORRECT = 'Datos incompletos o con formato incorrecto';
-    public const SERVER_INTERNAL_ERROR = 'Error interno del servidor';
-    public const UNAUTHORIZED = 'No autorizado';
+    public const SERVER_ERR = 'Error interno del servidor';
+    public const AUTHORIZED = 'No autorizado';
     public const PHP_INPUT = 'php://input';
     public const POST_DATA = 'POST';
     public const GET_DATA = 'GET';

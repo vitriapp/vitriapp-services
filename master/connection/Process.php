@@ -36,7 +36,7 @@ class Process extends Connection
      */
     final public function getData(string $query): array
     {
-        $this->system();
+        $this->systemAccess();
         $results = $this->connect->query($query);
         $result = [];
         foreach ($results as $value) {
@@ -51,14 +51,14 @@ class Process extends Connection
      */
     final public function nonQuery(string $query): int
     {
-        $this->system();
+        $this->systemAccess();
         $this->connect->query($query);
         return $this->connect->affected_rows;
     }
 
     final public function nonQueryId(string $query) : int
     {
-        $this->system();
+        $this->systemAccess();
         $this->connect->query($query);
         $rows_data = $this->connect->affected_rows;
         if ($rows_data >= 1) {
