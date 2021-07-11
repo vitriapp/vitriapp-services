@@ -7,9 +7,9 @@ declare(strict_types=1);
  *
  * @category Developer
  * @package  Vitriapp
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
  * @Date:    2021/6/14 0:19:41
- * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  */
 
 namespace services\master;
