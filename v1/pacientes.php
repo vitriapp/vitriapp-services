@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace services\v1;
-
 /**
- * *
- *  * PHP version 7.4
- *  *
- *  * @Date: 2021/6/14 4:14:58
- *  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
- *  * @category Developer
- *  * @package  Vitriapp
- *  * @license  Commercial
+ * PHP version 7.4
  *
+ * @category Developer
+ * @package  Vitriapp
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @license  Commercial PHP License 1.0
+ * @Date:    2021/6/14 0:19:41
+ * @link     https://www.vitriapp.com PHP License 1.0
  */
+
+namespace services\v1;
 
 use services\master\Responses;
 use services\master\Patients;

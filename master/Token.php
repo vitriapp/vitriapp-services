@@ -31,43 +31,81 @@ require_once __DIR__ . '/connection/Connection.php';
 class Token
 {
 
-    function updateToken($datetime)
+    /**
+     * Update token
+     *
+     * This method is useful for update token
+     *
+     * @param string $datetime for update time
+     *
+     * @return mixed | int
+     */
+    final public function updateToken(string $datetime): int
     {
         $process = new Process();
         $query = "update usuarios_token set Estado = 'Inactivo' WHERE  Fecha < '$datetime'";
-        $verifica = $process->nonQuery($query);
-        if ($verifica) {
-            $this->escribirEntrada($verifica);
-            return $verifica;
-        } else {
-            return 0;
+        $verify = $process->nonQuery($query);
+        if ($verify) {
+            $this->enterWrite($verify);
+            return $verify;
         }
+        return 0;
     }
 
-    function crearTxt($direccion)
+    /**
+     * Create txt
+     *
+     * This method is useful for update token
+     *
+     * @param string $files file to write
+     *
+     * @return mixed | int
+     */
+    final public function createTxt(string $files):string
     {
-           $archivo = fopen($direccion, 'w') or die("error al crear el archivo de registros");
-           $texto = "------------------------------------ Registros del CRON JOB ------------------------------------ \n";
-           fwrite($archivo, $texto) or die("no pudimos escribir el registro");
-           fclose($archivo);
+           $files = fopen($files, 'wb') or die('error al crear el files de registros');
+           $words = '---------- Registros del CRON JOB --------- \n';
+           fwrite($files, $words) or die('No pudimos escribir el registro');
+           fclose($files);
+           return '';
     }
 
-    function escribirEntrada($registros)
+    /**
+     * Enter write
+     *
+     * This method is useful for write text in file
+     *
+     * @param string $registers file to write
+     *
+     * @return mixed | int
+     */
+    final public function enterWrite(string $registers):string
     {
-        $direccion = "../cron/registros/registros.txt";
-        if (!file_exists($direccion)) {
-            $this->crearTxt($direccion);
+        $directory_file = '../cron/registros/registros.txt';
+        if (!file_exists($directory_file)) {
+            $this->createTxt($directory_file);
         }
-        /* crear una entrada nueva */
-        $this->escribirTxt($direccion, $registros);
+        $this->writeTxt($directory_file, $registers);
+        return '';
     }
 
-    function escribirTxt($direccion, $registros)
+    /**
+     * Enter write
+     *
+     * This method is useful for write text in file
+     *
+     * @param string $registers data
+     * @param string $directory_file file to write
+     *
+     * @return mixed | int
+     */
+    final public function writeTxt(string $directory_file, string $registers):string
     {
-        $date = date("Y-m-d H:i");
-        $archivo = fopen($direccion, 'a') or die("error al abrir el archivo de registros");
-           $texto = "Se modificaron $registros registro(s) el dia [$date] \n";
-           fwrite($archivo, $texto) or die("no pudimos escribir el registro");
-           fclose($archivo);
+        $datetime = date('Y-m-d H:i');
+        $files = fopen($directory_file, 'ab') or die("error al abrir el files de registros");
+           $words = 'Se modificaron '.$registers .'registro(s) el dia ['.$datetime.'] \n';
+           fwrite($files, $words) or die('No pudimos escribir el registro');
+           fclose($files);
+           return '';
     }
 }
