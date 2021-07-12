@@ -28,25 +28,34 @@ $patients = new Patients();
 $constant = new Constant();
 
 if ($constant->method() === Constant::GET_DATA) {
-    if (isset($_GET["page"])) {
-        $pagina = $_GET["page"];
-        $listaPacientes = $patients->listaPacientes($pagina);
+    $value = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+    $id_user = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+    if (isset($value)) {
+        $pages = $value;
+        echo $pages;
+        $list_patients = $patients->listPatients((int)$pages);
         header(Constant::CONTENT_TYPE_JSON);
-        echo json_encode($listaPacientes);
+        echo json_encode($list_patients);
         http_response_code(200);
-    } elseif (isset($_GET['id'])) {
-        $pacienteid = $_GET['id'];
-        $datosPaciente = $patients->obtenerPaciente($pacienteid);
+    } elseif (isset($id_user)) {
+        $id_patients = $id_user;
+        $data_patients = $patients->getPatient((int)$id_patients);
         header(Constant::CONTENT_TYPE_JSON);
-        echo json_encode($datosPaciente);
+        echo json_encode($data_patients);
         http_response_code(200);
     }
 } elseif ($constant->method() === Constant::POST_DATA) {
-    //recibimos los datos enviados
+    /**
+     *We receive the sent data
+     */
     $information = file_get_contents(Constant::PHP_INPUT);
-    //enviamos los datos al manejador
-    $data_array = $patients->post($information);
-    //delvovemos una respuesta
+    /**
+     *We send data to the handler
+     */
+    $data_array = $patients->sendDataProcess($information);
+    /**
+     *Let's give an answer
+     */
     header(Constant::CONTENT_TYPE_JSON);
     if (isset($data_array[Constant::RESULT][Constant::ERROR_ID])) {
         $response_code = $data_array[Constant::RESULT][Constant::ERROR_ID];
@@ -56,11 +65,17 @@ if ($constant->method() === Constant::GET_DATA) {
     }
     echo json_encode($data_array);
 } elseif ($constant->method() === Constant::PUT_DATA) {
-    //recibimos los datos enviados
+    /**
+     *We receive the sent data
+     */
     $information = file_get_contents(Constant::PHP_INPUT);
-    //enviamos datos al manejador
+    /**
+     *We send data to the handler
+     */
     $data_array = $patients->put($information);
-    //delvovemos una respuesta
+    /**
+     *Let's give an answer
+     */
     header(Constant::CONTENT_TYPE_JSON);
     if (isset($data_array[Constant::RESULT][Constant::ERROR_ID])) {
         $response_code = $data_array[Constant::RESULT][Constant::ERROR_ID];
@@ -71,21 +86,29 @@ if ($constant->method() === Constant::GET_DATA) {
     echo json_encode($data_array);
 } elseif ($constant->method() === Constant::DELETE_DATA) {
     $headers = getallheaders();
-    if (isset($headers[Constant::TOKEN]) && isset($headers["pacienteId"])) {
-        //recibimos los datos enviados por el header
+    if (isset($headers[Constant::TOKEN], $headers['pacienteId'])) {
+        /**
+         *We receive the data sent by the header
+         */
         $send_data = [
             Constant::TOKEN => $headers[Constant::TOKEN],
-            "pacienteId" => $headers["pacienteId"]
+            'pacienteId' => $headers['pacienteId']
         ];
         $information = json_encode($send_data);
     } else {
-        //recibimos los datos enviados
+        /**
+         *We receive the sent data
+         */
         $information = file_get_contents(Constant::PHP_INPUT);
     }
 
-    //enviamos datos al manejador
+    /**
+     *We send data to the handler
+     */
     $data_array = $patients->delete($information);
-    //delvovemos una respuesta
+    /**
+     *Let's give an answer
+     */
     header(Constant::CONTENT_TYPE_JSON);
     if (isset($data_array[Constant::RESULT][Constant::ERROR_ID])) {
         $response_code = $data_array[Constant::RESULT][Constant::ERROR_ID];
