@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace services\master\connection;
 
-include __DIR__ . '/Connection.php';
+require_once __DIR__ . '/Connection.php';
 
 /**
  * Class Process
@@ -40,11 +40,18 @@ class Process extends Connection
      */
     private function converterUtf(array $array): array
     {
-        array_walk_recursive($array, static function (&$item_list) {
-            if (!mb_detect_encoding($item_list, 'UTF-8', true)) {
-                $item_list = utf8_encode($item_list);
+        array_walk_recursive(
+            $array,
+            static function (&$item_list) {
+                if (!mb_detect_encoding(
+                    $item_list,
+                    'UTF-8',
+                    true
+                )) {
+                    $item_list = utf8_encode($item_list);
+                }
             }
-        });
+        );
         return $array;
     }
 
