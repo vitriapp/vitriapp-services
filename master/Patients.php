@@ -105,7 +105,7 @@ class Patients
         $this->token = $array['token'];
         $array_token =   $this->findToken();
         if ($array_token) {
-            if (!isset($array['nombre']) || !isset($array['dni']) || !isset($array['correo'])) {
+            if (!isset($array['nombre'], $array['dni'], $array['correo'])) {
                 return $response->formatNotCorrect();
             }
 
