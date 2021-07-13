@@ -26,8 +26,11 @@ $constant = new Constant();
 
 if ($constant->method() === Constant::POST_DATA) {
     $information = file_get_contents(Constant::PHP_INPUT);
-
-    $array = $authentication->login($information);
+    try {
+        $array = $authentication->login($information);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
 
     header(Constant::CONTENT_TYPE_JSON);
 
@@ -37,9 +40,17 @@ if ($constant->method() === Constant::POST_DATA) {
     } else {
         http_response_code(200);
     }
-    echo json_encode($array);
+    try {
+        echo json_encode($array, JSON_THROW_ON_ERROR);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
 } else {
     header(Constant::CONTENT_TYPE_JSON);
     $array = $response->methodNotAllowed();
-    echo json_encode($array);
+    try {
+        echo json_encode($array, JSON_THROW_ON_ERROR);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
 }

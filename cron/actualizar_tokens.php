@@ -15,9 +15,14 @@ declare(strict_types=1);
 
 namespace services\cron;
 
+use JsonException;
 use services\master\Unique;
 
 require_once __DIR__ . '/../master/Unique.php';
 $token = new Unique();
 $datetime = date('Y-m-d H:i');
-echo $token->updateToken($datetime);
+try {
+    echo $token->updateToken($datetime);
+} catch (JsonException $exception) {
+    log((float)$exception);
+}

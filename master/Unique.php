@@ -15,9 +15,10 @@ declare(strict_types=1);
 
 namespace services\master;
 
-use services\master\connection\Process;
+use JsonException;
+use services\master\connection\Executor;
 
-require_once __DIR__ . '/connection/Connection.php';
+require_once __DIR__ . '/connection/Executor.php';
 
 /**
  * Class Unique
@@ -39,12 +40,13 @@ class Unique
      * @param string $datetime for update time
      *
      * @return mixed | int
+     * @throws JsonException
      */
-    final public function updateToken(string $datetime): int
+    final public function updateToken(string $datetime): string
     {
         $table = 'usuarios_token';
         $status = 'Inactivo';
-        $process = new Process();
+        $process = new Executor();
         $query = 'UPDATE ' . $table . "
                 SET Estado = '$status' WHERE  Fecha < '$datetime'";
         $verify = $process->nonQuery($query);
@@ -52,7 +54,7 @@ class Unique
             $this->enterWrite($verify);
             return $verify;
         }
-        return 0;
+        return '0';
     }
 
     /**
@@ -105,7 +107,7 @@ class Unique
     final public function writeTxt(string $registers, string $directoryFile):string
     {
         $datetime = date('Y-m-d H:i');
-        $files = fopen($directoryFile, 'ab') or die("Error abrir archivo registro");
+        $files = fopen($directoryFile, 'ab') or die('Error abrir archivo registro');
            $words = 'Editados '.$registers .'registro(s) el dia ['.$datetime.'] \n';
            fwrite($files, $words) or die('No pudimos escribir el registro');
            fclose($files);

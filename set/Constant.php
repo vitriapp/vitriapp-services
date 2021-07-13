@@ -63,7 +63,7 @@ class Constant
     public const PUT_DATA = 'PUT';
     public const DELETE_DATA = 'DELETE';
     public const CONTENT_TYPE_JSON = 'Content-Type: application/json';
-    public const INVALID_TOKEN = 'El Unique que envio es invalido o ha caducado';
+    public const INVALID_TOKEN = 'El token que envio es invalido o ha caducado';
 
     /**
      * Environment

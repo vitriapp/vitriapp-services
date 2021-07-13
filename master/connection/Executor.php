@@ -28,7 +28,7 @@ require_once __DIR__ . '/Connection.php';
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
  */
-class Process extends Connection
+class Executor extends Connection
 {
 
     /**
