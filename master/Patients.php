@@ -15,8 +15,8 @@ declare(strict_types=1);
 
 namespace services\master;
 
+use JsonException;
 use services\master\connection\Process;
-use services\master\libs\Util;
 use services\set\Constant;
 
 require_once __DIR__ . '/connection/Process.php';
@@ -34,17 +34,17 @@ require_once __DIR__ . '/Responses.php';
 class Patients
 {
 
-    private $table = 'pacientes';
-    private $codeUser = '';
-    private $identity = '';
-    private $nameUser = '';
-    private $address = '';
-    private $postal = '';
-    private $gender = '';
-    private $telephone = '';
-    private $birth = '0000-00-00';
-    private $email = '';
-    private $token = '';
+    private string $table = 'pacientes';
+    private string $codeUser = '';
+    private string $identity = '';
+    private string $nameUser = '';
+    private string $address = '';
+    private string $postal = '';
+    private string $gender = '';
+    private string $telephone = '';
+    private string $birth = '0000-00-00';
+    private string $email = '';
+    private string $token = '';
 
     /**
      * List patients
@@ -93,11 +93,12 @@ class Patients
      * @param string $json for show data from code patient
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function postProcess(string $json):array
     {
         $response = new Responses();
-        $array = json_decode($json, true);
+        $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         if (!isset($array['token'])) {
             return $response->unauthorized();
         }
@@ -115,11 +116,12 @@ class Patients
      * @param string $json for show data from code patient
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function putProcess(string $json):array
     {
         $responses = new Responses();
-        $information = json_decode($json, true);
+        $information = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         if (!isset($information['token'])) {
             return $responses->unauthorized();
         }
@@ -137,11 +139,12 @@ class Patients
      * @param string $json for show data from code patient
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function deleteProcess(string $json):array
     {
         $responses = new Responses();
-        $information = json_decode($json, true);
+        $information = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         if (!isset($information['token'])) {
             return $responses->unauthorized();
         }
@@ -156,10 +159,11 @@ class Patients
      *
      * This method return result execute query for save patient
      *
-     * @param array  $arrayToken data text field
-     * @param string $json       data text field
+     * @param array $arrayToken data text field
+     * @param string $json data text field
      *
      * @return string | int | mixed
+     * @throws JsonException
      */
     private function postProcessSave(array $arrayToken, string $json):array
     {
@@ -175,10 +179,11 @@ class Patients
      *
      * This method return result execute query for update patient
      *
-     * @param array  $arrayToken data text field
-     * @param string $json       data text field
+     * @param array $arrayToken data text field
+     * @param string $json data text field
      *
      * @return string | int | mixed
+     * @throws JsonException
      */
     private function putProcessUpdate(array $arrayToken, string $json):array
     {
@@ -195,10 +200,11 @@ class Patients
      *
      * This method return result execute query for delete patient
      *
-     * @param array  $array_token data text field
-     * @param string $json        data text field
+     * @param array $array_token data text field
+     * @param string $json data text field
      *
      * @return string | int | mixed
+     * @throws JsonException
      */
     private function delProcessDelete(array $array_token, string $json):array
     {
@@ -217,11 +223,12 @@ class Patients
      * @param string $json for show data from code patient
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function postValidate(string $json):array
     {
         $response = new Responses();
-        $array = json_decode($json, true);
+        $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
         $this->incorrectFormat($array['nombre'], $array['dni'], $array['correo']);
 
@@ -259,11 +266,12 @@ class Patients
      * @param string $json for show data from code patient
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function putValidate(string $json):array
     {
         $responses = new Responses();
-        $information = json_decode($json, true);
+        $information = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
         $this->validateIdentity($information['pacienteId']);
 
@@ -303,11 +311,12 @@ class Patients
      * @param string $json for show data from code patient
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function deleteValidate(string $json):array
     {
         $responses = new Responses();
-        $information = json_decode($json, true);
+        $information = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
         $this->validateIdentity($information['pacienteId']);
 

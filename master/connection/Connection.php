@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace services\master\connection;
 
+use JsonException;
 use mysqli;
 use services\set\Constant;
 
@@ -34,7 +35,7 @@ class Connection extends mysqli
     private $password;
     private $database;
     private $port;
-    protected $connect;
+    protected mysqli $connect;
 
     /**
      * Get Server
@@ -102,6 +103,7 @@ class Connection extends mysqli
      * This method return connection
      *
      * @return string | int | mixed
+     * @throws JsonException
      */
     final public function systemAccess(): mysqli
     {
@@ -134,6 +136,7 @@ class Connection extends mysqli
      * This method return data connection with json format
      *
      * @return string | int | mixed
+     * @throws JsonException
      */
     private function connectionData(): array
     {
@@ -144,6 +147,6 @@ class Connection extends mysqli
         $develop =  Constant::CONFIG_DEV;
         $connection = $environment === $localhost ? $develop : Constant::CONFIG_PDN;
         $route = file_get_contents($folder . '/' . $connection);
-        return json_decode($route, true);
+        return json_decode($route, true, 512, JSON_THROW_ON_ERROR);
     }
 }

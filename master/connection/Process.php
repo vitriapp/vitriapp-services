@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace services\master\connection;
 
+use JsonException;
+
 require_once __DIR__ . '/Connection.php';
 
 /**
@@ -59,6 +61,7 @@ class Process extends Connection
      * @param string $query execute in database for get data
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function getData(string $query): array
     {
@@ -79,6 +82,7 @@ class Process extends Connection
      * @param string $query execute in database for actions database
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function nonQuery(string $query): int
     {
@@ -95,6 +99,7 @@ class Process extends Connection
      * @param string $query execute in database for actions database with one data
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function nonQueryId(string $query) : int
     {

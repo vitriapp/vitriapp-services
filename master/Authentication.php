@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace services\master;
 
+use JsonException;
 use services\master\connection\Process;
 use services\set\Constant;
 use services\master\libs\Hash;
@@ -44,12 +45,13 @@ class Authentication
      * @param string $json data charged from database.
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function login(string $json): array
     {
         $process = new Process();
         $response = new Responses();
-        $array = json_decode($json, true);
+        $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         $text_password = Constant::W_PASSWORD;
         if (isset($array[Constant::W_USER]) || isset($array[$text_password])) {
             $password = $process->encryptData($array[Constant::W_PASSWORD]);
