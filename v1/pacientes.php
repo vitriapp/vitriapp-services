@@ -51,7 +51,7 @@ if ($constant->method() === Constant::GET_DATA) {
     /**
      *We send data to the handler
      */
-    $data_array = $patients->sendDataProcess($information);
+    $data_array = $patients->postProcess($information);
     /**
      *Let's give an answer
      */
@@ -71,7 +71,7 @@ if ($constant->method() === Constant::GET_DATA) {
     /**
      *We send data to the handler
      */
-    $data_array = $patients->put($information);
+    $data_array = $patients->putProcess($information);
     /**
      *Let's give an answer
      */
@@ -104,7 +104,7 @@ if ($constant->method() === Constant::GET_DATA) {
     /**
      *We send data to the handler
      */
-    $data_array = $patients->delete($information);
+    $data_array = $patients->deleteProcess($information);
     /**
      *Let's give an answer
      */

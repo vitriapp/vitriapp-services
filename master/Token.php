@@ -63,7 +63,7 @@ class Token
      */
     final public function createTxt(string $files):string
     {
-           $files = fopen($files, 'wb') or die('error al crear el files de registros');
+           $files = fopen($files, 'wb') or die('Error creando archivo.');
            $words = '---------- Registros del CRON JOB --------- \n';
            fwrite($files, $words) or die('No pudimos escribir el registro');
            fclose($files);
@@ -94,15 +94,15 @@ class Token
      *
      * This method is useful for write text in file
      *
-     * @param string $registers data
-     * @param string $directory_file file to write
+     * @param string $registers     data
+     * @param string $directoryFile file to write
      *
      * @return mixed | int
      */
-    final public function writeTxt(string $directory_file, string $registers):string
+    final public function writeTxt(string $registers, string $directoryFile):string
     {
         $datetime = date('Y-m-d H:i');
-        $files = fopen($directory_file, 'ab') or die("error al abrir el files de registros");
+        $files = fopen($directoryFile, 'ab') or die("Error abrir archivo registro");
            $words = 'Se modificaron '.$registers .'registro(s) el dia ['.$datetime.'] \n';
            fwrite($files, $words) or die('No pudimos escribir el registro');
            fclose($files);
