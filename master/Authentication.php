@@ -16,11 +16,11 @@ declare(strict_types=1);
 namespace services\master;
 
 use JsonException;
-use services\master\connection\Process;
+use services\master\connection\Executor;
 use services\set\Constant;
 use services\master\libs\Hash;
 
-require_once __DIR__ . '/connection/Process.php';
+require_once __DIR__ . '/connection/Executor.php';
 require_once __DIR__ . '/Responses.php';
 require_once __DIR__ . '/../set/Constant.php';
 require_once __DIR__ . '/libs/Hash.php';
@@ -49,7 +49,7 @@ class Authentication
      */
     final public function login(string $json): array
     {
-        $process = new Process();
+        $process = new Executor();
         $response = new Responses();
         $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         $text_password = Constant::W_PASSWORD;
@@ -67,9 +67,10 @@ class Authentication
      * This method is useful for validate password for get new token.
      *
      * @param string $password the string to password
-     * @param array  $array    data charged from database.
+     * @param array $array data charged from database.
      *
      * @return mixed
+     * @throws JsonException
      */
     private function validateLogin(string $password, array $array): array
     {
@@ -86,9 +87,10 @@ class Authentication
      * This method is useful for validate password for get new token.
      *
      * @param string $password the string to password
-     * @param array  $array    data charged from database.
+     * @param array $array data charged from database.
      *
      * @return mixed
+     * @throws JsonException
      */
     private function validatePassword(string $password, array $array): array
     {
@@ -106,10 +108,11 @@ class Authentication
      *
      * This method is useful for get token through from state and userID
      *
-     * @param string $state  state user
+     * @param string $state state user
      * @param string $userID ID user
      *
      * @return mixed
+     * @throws JsonException
      */
     private function getToken(string $state, string $userID): array
     {
@@ -128,6 +131,7 @@ class Authentication
      * @param string $userID ID user
      *
      * @return mixed
+     * @throws JsonException
      */
     private function verifySaveToken(string $userID): array
     {
@@ -151,10 +155,11 @@ class Authentication
      * @param string $email email user
      *
      * @return array|int|mixed
+     * @throws JsonException
      */
     private function getUserData(string $email): array
     {
-        $process = new Process();
+        $process = new Executor();
         $query = "CALL sp_data_access_user('$email')";
         $information = $process->getData($query);
         if (isset($information[0][Constant::USER_ID])) {
@@ -171,10 +176,11 @@ class Authentication
      * @param string $userId ID user
      *
      * @return mixed
+     * @throws JsonException
      */
     private function saveToken(string $userId): string
     {
-        $process = new Process();
+        $process = new Executor();
         $hashes = new Hash();
         $token = bin2hex($hashes->crypt(Constant::SECRET));
         $generate = date('Y-m-d H:i');

@@ -16,10 +16,10 @@ declare(strict_types=1);
 namespace services\master;
 
 use JsonException;
-use services\master\connection\Process;
+use services\master\connection\Executor;
 use services\set\Constant;
 
-require_once __DIR__ . '/connection/Process.php';
+require_once __DIR__ . '/connection/Executor.php';
 require_once __DIR__ . '/Responses.php';
 
 /**
@@ -54,10 +54,11 @@ class Patients
      * @param int $page for show quantity registers
      *
      * @return mixed | int
+     * @throws JsonException
      */
     final public function listPatients(int $page = 1):array
     {
-        $process = new Process();
+        $process = new Executor();
         $initial  = 0 ;
         $quantity = 100;
         if ($page > 1) {
@@ -77,10 +78,11 @@ class Patients
      * @param int $codes for show data from code patient
      *
      * @return mixed | int
+     * @throws JsonException
      */
     final public function getPatient(int $codes):array
     {
-        $process = new Process();
+        $process = new Executor();
         $query = "CALL get_patient($codes)";
         return $process->getData($query);
     }
@@ -159,8 +161,8 @@ class Patients
      *
      * This method return result execute query for save patient
      *
-     * @param array $arrayToken data text field
-     * @param string $json data text field
+     * @param array  $arrayToken data text field
+     * @param string $json       data text field
      *
      * @return string | int | mixed
      * @throws JsonException
@@ -179,8 +181,8 @@ class Patients
      *
      * This method return result execute query for update patient
      *
-     * @param array $arrayToken data text field
-     * @param string $json data text field
+     * @param array  $arrayToken data text field
+     * @param string $json       data text field
      *
      * @return string | int | mixed
      * @throws JsonException
@@ -200,8 +202,8 @@ class Patients
      *
      * This method return result execute query for delete patient
      *
-     * @param array $array_token data text field
-     * @param string $json data text field
+     * @param array  $array_token data text field
+     * @param string $json        data text field
      *
      * @return string | int | mixed
      * @throws JsonException
@@ -418,10 +420,11 @@ class Patients
      * This method return result execute query insert in database
      *
      * @return string | int | mixed
+     * @throws JsonException
      */
     private function insertPatient():int
     {
-        $process = new Process();
+        $process = new Executor();
         $query = 'INSERT INTO ' . $this->table . "
         (DNI,Nombre,Direccion,CodigoPostal,Telefono,Genero,FechaNacimiento,Correo)
         values
@@ -460,10 +463,11 @@ class Patients
      * This method return result execute query update patient
      *
      * @return string | int | mixed
+     * @throws JsonException
      */
     private function updatePatient():int
     {
-        $process = new Process();
+        $process = new Executor();
         $query = 'UPDATE ' . $this->table . "
         SET 
         Nombre ='" . $this->nameUser . "',
@@ -488,10 +492,11 @@ class Patients
      * This method return result execute query delete patient
      *
      * @return string | int | mixed
+     * @throws JsonException
      */
     private function deletePatient():int
     {
-        $process = new Process();
+        $process = new Executor();
         $query = 'DELETE FROM ' . $this->table . " 
         WHERE 
         PacienteId= '" . $this->codeUser . "'";
@@ -508,10 +513,11 @@ class Patients
      * This method return data token, user id and state from user
      *
      * @return string | int | mixed
+     * @throws JsonException
      */
     private function findToken():array
     {
-        $process = new Process();
+        $process = new Executor();
         $query = "SELECT 
         TokenId,
         UsuarioId,
@@ -523,7 +529,7 @@ class Patients
         if ($respond) {
             return $respond;
         }
-        return 0;
+        return [];
     }
 
     /**
@@ -534,11 +540,12 @@ class Patients
      * @param string $token for show quantity registers
      *
      * @return mixed | int
+     * @throws JsonException
      */
     private function updateToken(string $token):int
     {
         $user_table = 'usuarios_token';
-        $process = new Process();
+        $process = new Executor();
         $datetime = date('Y-m-d H:i');
         $query = 'UPDATE ' . $user_table . " 
                 SET Fecha = '$datetime' 

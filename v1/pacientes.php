@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace services\v1;
 
+use JsonException;
 use services\master\Responses;
 use services\master\Patients;
 use services\set\Constant;
@@ -25,22 +26,41 @@ require_once __DIR__ . '/../master/Patients.php';
 $responses = new Responses();
 $patients = new Patients();
 $constant = new Constant();
+$data_array = '';
+$information = '';
+$data_patients = '';
+$list_patients = '';
 
 if ($constant->method() === Constant::GET_DATA) {
     $value = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
     $id_user = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
     if (isset($value)) {
         $pages = $value;
-        echo $pages;
-        $list_patients = $patients->listPatients((int)$pages);
+        try {
+            $list_patients = $patients->listPatients((int)$pages);
+        } catch (JsonException $exception) {
+            log((float)$exception);
+        }
         header(Constant::CONTENT_TYPE_JSON);
-        echo json_encode($list_patients);
+        try {
+            echo json_encode($list_patients, JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            log((float)$exception);
+        }
         http_response_code(200);
     } elseif (isset($id_user)) {
         $id_patients = $id_user;
-        $data_patients = $patients->getPatient((int)$id_patients);
+        try {
+            $data_patients = $patients->getPatient((int)$id_patients);
+        } catch (JsonException $exception) {
+            log((float)$exception);
+        }
         header(Constant::CONTENT_TYPE_JSON);
-        echo json_encode($data_patients);
+        try {
+            echo json_encode($data_patients, JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            log((float)$exception);
+        }
         http_response_code(200);
     }
 } elseif ($constant->method() === Constant::POST_DATA) {
@@ -51,7 +71,11 @@ if ($constant->method() === Constant::GET_DATA) {
     /**
      *We send data to the handler
      */
-    $data_array = $patients->postProcess($information);
+    try {
+        $data_array = $patients->postProcess($information);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
     /**
      *Let's give an answer
      */
@@ -62,7 +86,11 @@ if ($constant->method() === Constant::GET_DATA) {
     } else {
         http_response_code(200);
     }
-    echo json_encode($data_array);
+    try {
+        echo json_encode($data_array, JSON_THROW_ON_ERROR);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
 } elseif ($constant->method() === Constant::PUT_DATA) {
     /**
      *We receive the sent data
@@ -71,7 +99,11 @@ if ($constant->method() === Constant::GET_DATA) {
     /**
      *We send data to the handler
      */
-    $data_array = $patients->putProcess($information);
+    try {
+        $data_array = $patients->putProcess($information);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
     /**
      *Let's give an answer
      */
@@ -82,7 +114,11 @@ if ($constant->method() === Constant::GET_DATA) {
     } else {
         http_response_code(200);
     }
-    echo json_encode($data_array);
+    try {
+        echo json_encode($data_array, JSON_THROW_ON_ERROR);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
 } elseif ($constant->method() === Constant::DELETE_DATA) {
     $headers = getallheaders();
     if (isset($headers[Constant::TOKEN], $headers['pacienteId'])) {
@@ -93,7 +129,11 @@ if ($constant->method() === Constant::GET_DATA) {
             Constant::TOKEN => $headers[Constant::TOKEN],
             'pacienteId' => $headers['pacienteId']
         ];
-        $information = json_encode($send_data);
+        try {
+            $information = json_encode($send_data, JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            log((float)$exception);
+        }
     } else {
         /**
          *We receive the sent data
@@ -104,7 +144,11 @@ if ($constant->method() === Constant::GET_DATA) {
     /**
      *We send data to the handler
      */
-    $data_array = $patients->deleteProcess($information);
+    try {
+        $data_array = $patients->deleteProcess($information);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
     /**
      *Let's give an answer
      */
@@ -115,9 +159,17 @@ if ($constant->method() === Constant::GET_DATA) {
     } else {
         http_response_code(200);
     }
-    echo json_encode($data_array);
+    try {
+        echo json_encode($data_array, JSON_THROW_ON_ERROR);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
 } else {
     header(Constant::CONTENT_TYPE_JSON);
     $data_array = $responses->methodNotAllowed();
-    echo json_encode($data_array);
+    try {
+        echo json_encode($data_array, JSON_THROW_ON_ERROR);
+    } catch (JsonException $exception) {
+        log((float)$exception);
+    }
 }
