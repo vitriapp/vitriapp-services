@@ -20,7 +20,7 @@ use services\master\connection\Process;
 require_once __DIR__ . '/connection/Connection.php';
 
 /**
- * Class Token
+ * Class Unique
  *
  * @category Developer
  * @package  Vitriapp
@@ -28,7 +28,7 @@ require_once __DIR__ . '/connection/Connection.php';
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
  */
-class Token
+class Unique
 {
 
     /**

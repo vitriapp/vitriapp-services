@@ -15,9 +15,9 @@ declare(strict_types=1);
 
 namespace services\cron;
 
-use Token;
+use services\master\Unique;
 
-require_once __DIR__ . '/../master/Token.php';
-$token = new Token();
+require_once __DIR__ . '/../master/Unique.php';
+$token = new Unique();
 $datetime = date('Y-m-d H:i');
-echo $token->actualizarTokens($datetime);
+echo $token->updateToken($datetime);

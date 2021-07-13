@@ -6,5 +6,9 @@
             "email": "maalben@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+
+    "require-dev": {
+        "phpmd/phpmd" : "@stable"
+    }
 }
