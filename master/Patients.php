@@ -363,11 +363,7 @@ class Patients
         string $identity,
         string $email
     ):bool {
-        if (isset(
-            $name,
-            $identity,
-            $email
-        )) {
+        if (isset($name, $identity, $email)) {
             $this->nameUser = $name;
             $this->identity = $identity;
             $this->email = $email;
