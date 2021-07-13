@@ -43,11 +43,7 @@ class Process extends Connection
         array_walk_recursive(
             $array,
             static function (&$item_list) {
-                if (!mb_detect_encoding(
-                    $item_list,
-                    'UTF-8',
-                    true
-                )) {
+                if (!mb_detect_encoding($item_list, 'UTF-8', true)) {
                     $item_list = utf8_encode($item_list);
                 }
             }

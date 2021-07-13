@@ -157,7 +157,7 @@ class Patients
      * This method return result execute query for save patient
      *
      * @param array  $arrayToken data text field
-     * @param string $json        data text field
+     * @param string $json       data text field
      *
      * @return string | int | mixed
      */
@@ -176,7 +176,7 @@ class Patients
      * This method return result execute query for update patient
      *
      * @param array  $arrayToken data text field
-     * @param string $json        data text field
+     * @param string $json       data text field
      *
      * @return string | int | mixed
      */
@@ -528,9 +528,12 @@ class Patients
      */
     private function updateToken(string $token):int
     {
+        $user_table = 'usuarios_token';
         $process = new Process();
         $datetime = date('Y-m-d H:i');
-        $query = "UPDATE usuarios_token SET Fecha = '$datetime' WHERE TokenId = '$token' ";
+        $query = 'UPDATE ' . $user_table . " 
+                SET Fecha = '$datetime' 
+                WHERE TokenId = '$token' ";
         $respond = $process->nonQuery($query);
         if ($respond >= 1) {
             return $respond;

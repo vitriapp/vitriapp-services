@@ -42,8 +42,11 @@ class Token
      */
     final public function updateToken(string $datetime): int
     {
+        $table = 'usuarios_token';
+        $status = 'Inactivo';
         $process = new Process();
-        $query = "update usuarios_token set Estado = 'Inactivo' WHERE  Fecha < '$datetime'";
+        $query = 'UPDATE ' . $table . "
+                SET Estado = '$status' WHERE  Fecha < '$datetime'";
         $verify = $process->nonQuery($query);
         if ($verify) {
             $this->enterWrite($verify);
@@ -103,7 +106,7 @@ class Token
     {
         $datetime = date('Y-m-d H:i');
         $files = fopen($directoryFile, 'ab') or die("Error abrir archivo registro");
-           $words = 'Se modificaron '.$registers .'registro(s) el dia ['.$datetime.'] \n';
+           $words = 'Editados '.$registers .'registro(s) el dia ['.$datetime.'] \n';
            fwrite($files, $words) or die('No pudimos escribir el registro');
            fclose($files);
            return '';
