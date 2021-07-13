@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace services\master;
 
 use services\master\connection\Process;
+use services\master\libs\Util;
 use services\set\Constant;
 
 require_once __DIR__ . '/connection/Process.php';
@@ -33,17 +34,17 @@ require_once __DIR__ . '/Responses.php';
 class Patients
 {
 
-    private $table = "pacientes";
-    private $pacienteid = "";
-    private $dni = "";
-    private $nombre = "";
-    private $direccion = "";
-    private $codigoPostal = "";
-    private $genero = "";
-    private $telefono = "";
-    private $fechaNacimiento = "0000-00-00";
-    private $correo = "";
-    private $token = "";
+    private $table = 'pacientes';
+    private $codeUser = '';
+    private $identity = '';
+    private $nameUser = '';
+    private $address = '';
+    private $postal = '';
+    private $gender = '';
+    private $telephone = '';
+    private $birth = '0000-00-00';
+    private $email = '';
+    private $token = '';
 
     /**
      * List patients
@@ -93,52 +94,323 @@ class Patients
      *
      * @return mixed
      */
-    public function sendDataProcess($json):array
+    final public function postProcess(string $json):array
+    {
+        $response = new Responses();
+        $array = json_decode($json, true);
+        if (!isset($array['token'])) {
+            return $response->unauthorized();
+        }
+        $this->token = $array['token'];
+        $array_token =   $this->findToken();
+
+        return $this->postProcessSave($array_token, $json);
+    }
+
+    /**
+     * Send data process put
+     *
+     * This method is useful for get one patient from code
+     *
+     * @param string $json for show data from code patient
+     *
+     * @return mixed
+     */
+    final public function putProcess(string $json):array
+    {
+        $responses = new Responses();
+        $information = json_decode($json, true);
+        if (!isset($information['token'])) {
+            return $responses->unauthorized();
+        }
+        $this->token = $information['token'];
+        $array_token =   $this->findToken();
+
+        return $this->putProcessUpdate($array_token, $json);
+    }
+
+    /**
+     * Delete patients with id from database
+     *
+     * This method is useful for delete one patient from code
+     *
+     * @param string $json for show data from code patient
+     *
+     * @return mixed
+     */
+    final public function deleteProcess(string $json):array
+    {
+        $responses = new Responses();
+        $information = json_decode($json, true);
+        if (!isset($information['token'])) {
+            return $responses->unauthorized();
+        }
+        $this->token = $information['token'];
+        $array_token =   $this->findToken();
+
+        return $this->delProcessDelete($array_token, $json);
+    }
+
+    /**
+     * Post process save
+     *
+     * This method return result execute query for save patient
+     *
+     * @param array  $array_token data text field
+     * @param string $json        data text field
+     *
+     * @return string | int | mixed
+     */
+    private function postProcessSave(array $array_token, string $json):array
+    {
+        $response = new Responses();
+        if ($array_token) {
+            return $this->postValidate($json);
+        }
+        return $response->unauthorized(Constant::INVALID_TOKEN);
+    }
+
+    /**
+     * Put process update
+     *
+     * This method return result execute query for update patient
+     *
+     * @param array  $array_token data text field
+     * @param string $json        data text field
+     *
+     * @return string | int | mixed
+     */
+    private function putProcessUpdate(array $array_token, string $json):array
+    {
+        $responses = new Responses();
+        if ($array_token) {
+            return $this->putValidate($json);
+        }
+
+        return $responses->unauthorized(Constant::INVALID_TOKEN);
+    }
+
+    /**
+     * Delete process
+     *
+     * This method return result execute query for delete patient
+     *
+     * @param array  $array_token data text field
+     * @param string $json        data text field
+     *
+     * @return string | int | mixed
+     */
+    private function delProcessDelete(array $array_token, string $json):array
+    {
+        $responses = new Responses();
+        if ($array_token) {
+            return $this->deleteValidate($json);
+        }
+        return $responses->unauthorized(Constant::INVALID_TOKEN);
+    }
+
+    /**
+     * Post validate
+     *
+     * This method is useful validate token for performed action in database
+     *
+     * @param string $json for show data from code patient
+     *
+     * @return mixed
+     */
+    final public function postValidate(string $json):array
     {
         $response = new Responses();
         $array = json_decode($json, true);
 
-        if (!isset($array['token'])) {
-            return $response->unauthorized();
+        $this->incorrectFormat($array['nombre'], $array['dni'], $array['correo']);
+
+        $this->validateRequired(
+            $array['nombre'],
+            $array['dni'],
+            $array['correo']
+        );
+
+        $this->validateAnother(
+            $array['telefono'],
+            $array['direccion'],
+            $array['codigoPostal'],
+            $array['genero'],
+            $array['fechaNacimiento']
+        );
+
+        $respond = $this->insertPatient();
+
+        if ($respond) {
+            $answer = $response->response;
+            $answer['result'] = [
+                'pacienteId' => $respond
+            ];
+            return $answer;
+        }
+        return $response->internalError();
+    }
+
+    /**
+     * Put validate
+     *
+     * This method is useful validate token for performed action in database
+     *
+     * @param string $json for show data from code patient
+     *
+     * @return mixed
+     */
+    final public function putValidate(string $json):array
+    {
+        $responses = new Responses();
+        $information = json_decode($json, true);
+
+        $this->validateIdentity($information['pacienteId']);
+
+        $this->codeUser = $information['pacienteId'];
+
+        $this->validateRequired(
+            $information['nombre'],
+            $information['dni'],
+            $information['correo']
+        );
+
+        $this->validateAnother(
+            $information['telefono'],
+            $information['direccion'],
+            $information['codigoPostal'],
+            $information['genero'],
+            $information['fechaNacimiento']
+        );
+
+        $respond = $this->updatePatient();
+        if ($respond) {
+            $answer = $responses->response;
+            $answer['result'] = [
+                'pacienteId' => $this->codeUser
+            ];
+            return $answer;
         }
 
-        $this->token = $array['token'];
-        $array_token =   $this->findToken();
-        if ($array_token) {
-            if (!isset($array['nombre'], $array['dni'], $array['correo'])) {
-                return $response->formatNotCorrect();
-            }
+        return $responses->internalError();
+    }
 
-            $this->nombre = $array['nombre'];
-            $this->dni = $array['dni'];
-            $this->correo = $array['correo'];
-            if (isset($array['telefono'])) {
-                $this->telefono = $array['telefono'];
-            }
-            if (isset($array['direccion'])) {
-                $this->direccion = $array['direccion'];
-            }
-            if (isset($array['codigoPostal'])) {
-                $this->codigoPostal = $array['codigoPostal'];
-            }
-            if (isset($array['genero'])) {
-                $this->genero = $array['genero'];
-            }
-            if (isset($array['fechaNacimiento'])) {
-                $this->fechaNacimiento = $array['fechaNacimiento'];
-            }
-            $respond = $this->insertPatient();
-            if ($respond) {
-                $answer = $response->response;
-                $answer['result'] = [
-                    'pacienteId' => $respond
-                ];
-                return $answer;
-            }
-            return $response->internalError();
+    /**
+     * Delete validate
+     *
+     * This method is useful validate token for performed action in database
+     *
+     * @param string $json for show data from code patient
+     *
+     * @return mixed
+     */
+    final public function deleteValidate(string $json):array
+    {
+        $responses = new Responses();
+        $information = json_decode($json, true);
+
+        $this->validateIdentity($information['pacienteId']);
+
+        $this->codeUser = $information['pacienteId'];
+
+        $respond = $this->deletePatient();
+        if ($respond) {
+            $answer = $responses->response;
+            $answer['result'] = [
+                'pacienteId' => $this->codeUser
+            ];
+            return $answer;
         }
+        return $responses->internalError();
+    }
 
-        return $response->unauthorized(Constant::INVALID_TOKEN);
+    /**
+     * Incorrect format
+     *
+     * This method return result execute query for save patient
+     *
+     * @param string $nameUser name user
+     * @param string $identity id user
+     * @param string $email    email user
+     *
+     * @return string | int | mixed
+     */
+    private function incorrectFormat(
+        string $nameUser,
+        string $identity,
+        string $email
+    ):string {
+        $response = new Responses();
+        if (!isset($nameUser, $identity, $email)) {
+            return $response->formatNotCorrect();
+        }
+        return '';
+    }
+
+    /**
+     * Validate field
+     *
+     * This method return result execute query for save patient
+     *
+     * @param string $name     name user
+     * @param string $identity identity user
+     * @param string $email    postal user
+     *
+     * @return string | int | mixed
+     */
+    private function validateRequired(
+        string $name,
+        string $identity,
+        string $email
+    ):bool {
+        if (isset(
+            $name,
+            $identity,
+            $email
+        )) {
+            $this->nameUser = $name;
+            $this->identity = $identity;
+            $this->email = $email;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Validate field
+     *
+     * This method return result execute query for save patient
+     *
+     * @param string $telephone telephone user
+     * @param string $address   address user
+     * @param string $postal    postal user
+     * @param string $gender    gender user
+     * @param string $birth     birth date user
+     *
+     * @return string | int | mixed
+     */
+    private function validateAnother(
+        string $telephone,
+        string $address,
+        string $postal,
+        string $gender,
+        string $birth
+    ):bool {
+        if (isset(
+            $telephone,
+            $address,
+            $postal,
+            $gender,
+            $birth
+        )) {
+            $this->telephone = $telephone;
+            $this->address = $address;
+            $this->postal = $postal;
+            $this->gender = $gender;
+            $this->birth = $birth;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -151,9 +423,13 @@ class Patients
     private function insertPatient():int
     {
         $process = new Process();
-        $query = "INSERT INTO " . $this->table . " (DNI,Nombre,Direccion,CodigoPostal,Telefono,Genero,FechaNacimiento,Correo)
+        $query = 'INSERT INTO ' . $this->table . "
+        (DNI,Nombre,Direccion,CodigoPostal,Telefono,Genero,FechaNacimiento,Correo)
         values
-        ('" . $this->dni . "','" . $this->nombre . "','" . $this->direccion ."','" . $this->codigoPostal . "','"  . $this->telefono . "','" . $this->genero . "','" . $this->fechaNacimiento . "','" . $this->correo . "')";
+        (
+        '$this->identity', '$this->nameUser', '$this->address',
+        '$this->postal', '$this->telephone', '$this->gender',
+        '$this->birth', '$this->email')";
         $respond = $process->nonQueryId($query);
         if ($respond) {
             return $respond;
@@ -162,69 +438,21 @@ class Patients
     }
 
     /**
-     * Send data process put
+     * Validate identity
      *
-     * This method is useful for get one patient from code
+     * This method return result validate identity user
      *
-     * @param string $json for show data from code patient
+     * @param string $identity id user
      *
-     * @return mixed
+     * @return string | int | mixed
      */
-    public function put($json)
+    private function validateIdentity(string $identity):string
     {
         $responses = new Responses();
-        $information = json_decode($json, true);
-
-        if (!isset($information['token'])) {
-            return $responses->unauthorized();
+        if (!isset($identity)) {
+            return $responses->formatNotCorrect();
         }
-
-        $this->token = $information['token'];
-        $array_token =   $this->findToken();
-        if ($array_token) {
-            if (!isset($information['pacienteId'])) {
-                return $responses->formatNotCorrect();
-            }
-
-            $this->pacienteid = $information['pacienteId'];
-            if (isset($information['nombre'])) {
-                $this->nombre = $information['nombre'];
-            }
-            if (isset($information['dni'])) {
-                $this->dni = $information['dni'];
-            }
-            if (isset($information['correo'])) {
-                $this->correo = $information['correo'];
-            }
-            if (isset($information['telefono'])) {
-                $this->telefono = $information['telefono'];
-            }
-            if (isset($information['direccion'])) {
-                $this->direccion = $information['direccion'];
-            }
-            if (isset($information['codigoPostal'])) {
-                $this->codigoPostal = $information['codigoPostal'];
-            }
-            if (isset($information['genero'])) {
-                $this->genero = $information['genero'];
-            }
-            if (isset($information['fechaNacimiento'])) {
-                $this->fechaNacimiento = $information['fechaNacimiento'];
-            }
-
-            $respond = $this->updatePatient();
-            if ($respond) {
-                $answer = $responses->response;
-                $answer['result'] = [
-                    'pacienteId' => $this->pacienteid
-                ];
-                return $answer;
-            }
-
-            return $responses->internalError();
-        }
-
-        return $responses->unauthorized(Constant::INVALID_TOKEN);
+        return '';
     }
 
     /**
@@ -237,51 +465,22 @@ class Patients
     private function updatePatient():int
     {
         $process = new Process();
-        $query = "UPDATE " . $this->table . " SET Nombre ='" . $this->nombre . "',Direccion = '" . $this->direccion . "', DNI = '" . $this->dni . "', CodigoPostal = '" .
-            $this->codigoPostal . "', Telefono = '" . $this->telefono . "', Genero = '" . $this->genero . "', FechaNacimiento = '" . $this->fechaNacimiento . "', Correo = '" . $this->correo .
-            "' WHERE PacienteId = '" . $this->pacienteid . "'";
+        $query = 'UPDATE ' . $this->table . "
+        SET 
+        Nombre ='" . $this->nameUser . "',
+        Direccion = '" . $this->address . "', 
+        DNI = '" . $this->identity . "', 
+        CodigoPostal = '" . $this->postal . "', 
+        Telefono = '" . $this->telephone . "', 
+        Genero = '" . $this->gender . "', 
+        FechaNacimiento = '" . $this->birth . "', 
+        Correo = '" . $this->email . "' 
+        WHERE PacienteId = '" . $this->codeUser . "'";
         $respond = $process->nonQuery($query);
         if ($respond >= 1) {
             return $respond;
         }
             return 0;
-    }
-
-    /**
-     * Delete patients with id from database
-     *
-     * This method is useful for delete one patient from code
-     *
-     * @param string $json for show data from code patient
-     *
-     * @return mixed
-     */
-    public function delete($json):array
-    {
-        $responses = new Responses();
-        $information = json_decode($json, true);
-
-        if (!isset($information['token'])) {
-            return $responses->unauthorized();
-        }
-        $this->token = $information['token'];
-        $array =   $this->findToken();
-        if ($array) {
-            if (!isset($information['pacienteId'])) {
-                return $responses->formatNotCorrect();
-            }
-            $this->pacienteid = $information['pacienteId'];
-            $respond = $this->deletePatient();
-            if ($respond) {
-                $answer = $responses->response;
-                $answer['result'] = [
-                    'pacienteId' => $this->pacienteid
-                ];
-                return $answer;
-            }
-            return $responses->internalError();
-        }
-        return $responses->unauthorized(Constant::INVALID_TOKEN);
     }
 
     /**
@@ -294,7 +493,9 @@ class Patients
     private function deletePatient():int
     {
         $process = new Process();
-        $query = "DELETE FROM " . $this->table . " WHERE PacienteId= '" . $this->pacienteid . "'";
+        $query = 'DELETE FROM ' . $this->table . " 
+        WHERE 
+        PacienteId= '" . $this->codeUser . "'";
         $respond = $process->nonQuery($query);
         if ($respond >= 1) {
             return $respond;
@@ -312,7 +513,13 @@ class Patients
     private function findToken():array
     {
         $process = new Process();
-        $query = "SELECT TokenId,UsuarioId,Estado from usuarios_token WHERE Token = '" . $this->token . "' AND Estado = 'Activo'";
+        $query = "SELECT 
+        TokenId,
+        UsuarioId,
+        Estado 
+        from usuarios_token WHERE 
+        Token = '" . $this->token . "' AND 
+        Estado = 'Activo'";
         $respond = $process->getData($query);
         if ($respond) {
             return $respond;
