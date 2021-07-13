@@ -396,13 +396,7 @@ class Patients
         string $gender,
         string $birth
     ):bool {
-        if (isset(
-            $telephone,
-            $address,
-            $postal,
-            $gender,
-            $birth
-        )) {
+        if (isset($telephone, $address, $postal, $gender, $birth)) {
             $this->telephone = $telephone;
             $this->address = $address;
             $this->postal = $postal;
