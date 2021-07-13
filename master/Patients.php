@@ -156,15 +156,15 @@ class Patients
      *
      * This method return result execute query for save patient
      *
-     * @param array  $array_token data text field
+     * @param array  $arrayToken data text field
      * @param string $json        data text field
      *
      * @return string | int | mixed
      */
-    private function postProcessSave(array $array_token, string $json):array
+    private function postProcessSave(array $arrayToken, string $json):array
     {
         $response = new Responses();
-        if ($array_token) {
+        if ($arrayToken) {
             return $this->postValidate($json);
         }
         return $response->unauthorized(Constant::INVALID_TOKEN);
@@ -175,15 +175,15 @@ class Patients
      *
      * This method return result execute query for update patient
      *
-     * @param array  $array_token data text field
+     * @param array  $arrayToken data text field
      * @param string $json        data text field
      *
      * @return string | int | mixed
      */
-    private function putProcessUpdate(array $array_token, string $json):array
+    private function putProcessUpdate(array $arrayToken, string $json):array
     {
         $responses = new Responses();
-        if ($array_token) {
+        if ($arrayToken) {
             return $this->putValidate($json);
         }
 
