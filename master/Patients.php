@@ -156,15 +156,15 @@ class Patients
      *
      * This method return result execute query for save patient
      *
-     * @param array  $array_token data text field
-     * @param string $json        data text field
+     * @param array  $arrayToken data text field
+     * @param string $json       data text field
      *
      * @return string | int | mixed
      */
-    private function postProcessSave(array $array_token, string $json):array
+    private function postProcessSave(array $arrayToken, string $json):array
     {
         $response = new Responses();
-        if ($array_token) {
+        if ($arrayToken) {
             return $this->postValidate($json);
         }
         return $response->unauthorized(Constant::INVALID_TOKEN);
@@ -175,15 +175,15 @@ class Patients
      *
      * This method return result execute query for update patient
      *
-     * @param array  $array_token data text field
-     * @param string $json        data text field
+     * @param array  $arrayToken data text field
+     * @param string $json       data text field
      *
      * @return string | int | mixed
      */
-    private function putProcessUpdate(array $array_token, string $json):array
+    private function putProcessUpdate(array $arrayToken, string $json):array
     {
         $responses = new Responses();
-        if ($array_token) {
+        if ($arrayToken) {
             return $this->putValidate($json);
         }
 
@@ -363,11 +363,7 @@ class Patients
         string $identity,
         string $email
     ):bool {
-        if (isset(
-            $name,
-            $identity,
-            $email
-        )) {
+        if (isset($name, $identity, $email)) {
             $this->nameUser = $name;
             $this->identity = $identity;
             $this->email = $email;
@@ -532,9 +528,12 @@ class Patients
      */
     private function updateToken(string $token):int
     {
+        $user_table = 'usuarios_token';
         $process = new Process();
         $datetime = date('Y-m-d H:i');
-        $query = "UPDATE usuarios_token SET Fecha = '$datetime' WHERE TokenId = '$token' ";
+        $query = 'UPDATE ' . $user_table . " 
+                SET Fecha = '$datetime' 
+                WHERE TokenId = '$token' ";
         $respond = $process->nonQuery($query);
         if ($respond >= 1) {
             return $respond;
