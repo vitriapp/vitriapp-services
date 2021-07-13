@@ -40,9 +40,9 @@ class Hash
     final public function crypt(string $input, int $rounds = 8): string
     {
         $iteration = '';
-        $salt_chars = array_merge(range('A', 'Z'), range('a', 'z'), range(0, 9));
+        $change = array_merge(range('A', 'Z'), range('a', 'z'), range(0, 9));
         for ($cycle = 0; $cycle < 22; $cycle++) {
-            $iteration .= $salt_chars[array_rand($salt_chars)];
+            $iteration .= $change[array_rand($change)];
         }
         return crypt($input, sprintf('$2a$%02d$', $rounds) . $iteration);
     }
