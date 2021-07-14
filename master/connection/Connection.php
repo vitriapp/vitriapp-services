@@ -109,8 +109,8 @@ class Connection extends mysqli
      */
     final public function systemAccess(): mysqli
     {
-        $array_data = $this->connectionData();
-        foreach ($array_data as $value) {
+        $arrayConnection = $this->connectionData();
+        foreach ($arrayConnection as $value) {
             $this->server = $value[Constant::SERVER];
             $this->user = $value[Constant::USER_DATABASE];
             $this->password = $value[Constant::PASSWORD];

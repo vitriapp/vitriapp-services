@@ -52,8 +52,8 @@ class Authentication
         $process = new Executor();
         $response = new Responses();
         $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        $text_password = Constant::W_PASSWORD;
-        if (isset($array[Constant::W_USER]) || isset($array[$text_password])) {
+        $passwordText = Constant::W_PASSWORD;
+        if (isset($array[Constant::W_USER]) || isset($array[$passwordText])) {
             $password = $process->encryptData($array[Constant::W_PASSWORD]);
             $array = $this->getUserData($array[Constant::W_USER]);
             return $this->validateLogin($password, $array);
@@ -96,8 +96,8 @@ class Authentication
     {
         $response = new Responses();
         $codes = Constant::USER_ID;
-        $text_pass = Constant::W_PASS;
-        if (crypt($password, $array[0][$text_pass]) === $array[0][$text_pass]) {
+        $passwordText = Constant::W_PASS;
+        if (crypt($password, $array[0][$passwordText]) === $array[0][$passwordText]) {
             return $this->getToken($array[0][Constant::W_STATE], $array[0][$codes]);
         }
         return $response->incorrectData(Constant::INVALID_PASSWORD);
