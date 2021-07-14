@@ -42,7 +42,7 @@ class Unique
      * @return mixed | int
      * @throws JsonException
      */
-    final public function updateToken(string $datetime): string
+    final public function updateToken(string $datetime): int
     {
         $table = 'usuarios_token';
         $status = 'Inactivo';
@@ -50,29 +50,11 @@ class Unique
         $query = 'UPDATE ' . $table . "
                 SET Estado = '$status' WHERE  Fecha < '$datetime'";
         $verify = $process->nonQuery($query);
-        if ($verify) {
+        if ($verify>0) {
             $this->enterWrite($verify);
             return $verify;
         }
-        return '0';
-    }
-
-    /**
-     * Create txt
-     *
-     * This method is useful for update token
-     *
-     * @param string $files file to write
-     *
-     * @return mixed | int
-     */
-    final public function createTxt(string $files):string
-    {
-           $files = fopen($files, 'wb') or die('Error creando archivo.');
-           $words = '---------- Registros del CRON JOB --------- \n';
-           fwrite($files, $words) or die('No pudimos escribir el registro');
-           fclose($files);
-           return '';
+        return 0;
     }
 
     /**
@@ -80,37 +62,24 @@ class Unique
      *
      * This method is useful for write text in file
      *
-     * @param string $registers file to write
+     * @param int $registers file to write
      *
-     * @return mixed | int
+     * @return mixed | int | string
      */
-    final public function enterWrite(string $registers):string
+    final public function enterWrite(int $registers):string
     {
-        $directory_file = '../cron/registros/registros.txt';
-        if (!file_exists($directory_file)) {
-            $this->createTxt($directory_file);
+        $filename = '../cron/registros/registros.txt';
+        if (!file_exists($filename)) {
+            $files = fopen($filename, 'wb') or die('Error creando archivo.');
+            $words = '---------- Registros del CRON JOB ---------'."\n";
+            fwrite($files, $words) or die('No pudimos escribir el registro');
+            fclose($files);
         }
-        $this->writeTxt($directory_file, $registers);
-        return '';
-    }
-
-    /**
-     * Enter write
-     *
-     * This method is useful for write text in file
-     *
-     * @param string $registers     data
-     * @param string $directoryFile file to write
-     *
-     * @return mixed | int
-     */
-    final public function writeTxt(string $registers, string $directoryFile):string
-    {
         $datetime = date('Y-m-d H:i');
-        $files = fopen($directoryFile, 'ab') or die('Error abrir archivo registro');
-           $words = 'Editados '.$registers .'registro(s) el dia ['.$datetime.'] \n';
-           fwrite($files, $words) or die('No pudimos escribir el registro');
-           fclose($files);
-           return '';
+        $files = fopen($filename, 'ab') or die('Error abrir archivo registro');
+        $words = 'Editados '.$registers .' dato(s) el dia ['.$datetime.']'."\n";
+        fwrite($files, $words) or die('No pudimos escribir el registro');
+        fclose($files);
+        return '';
     }
 }
