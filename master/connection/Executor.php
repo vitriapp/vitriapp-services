@@ -44,9 +44,9 @@ class Executor extends Connection
     {
         array_walk_recursive(
             $array,
-            static function (&$item_list) {
-                if (!mb_detect_encoding($item_list, 'UTF-8', true)) {
-                    $item_list = utf8_encode($item_list);
+            static function (&$value) {
+                if (!mb_detect_encoding($value, 'UTF-8', true)) {
+                    $value = utf8_encode($value);
                 }
             }
         );
@@ -105,8 +105,8 @@ class Executor extends Connection
     {
         $this->systemAccess();
         $this->connect->query($query);
-        $rows_data = $this->connect->affected_rows;
-        if ($rows_data >= 1) {
+        $registers = $this->connect->affected_rows;
+        if ($registers >= 1) {
             return $this->connect->insert_id;
         }
         return 0;
