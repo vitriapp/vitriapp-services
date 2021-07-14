@@ -17,6 +17,7 @@ namespace services\master;
 
 use JsonException;
 use services\master\connection\Executor;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 require_once __DIR__ . '/connection/Executor.php';
 
@@ -69,8 +70,13 @@ class Unique
     final public function enterWrite(int $registers):string
     {
         $filename = '../cron/registros/registros.txt';
+        $files = '';
         if (!file_exists($filename)) {
-            $files = fopen($filename, 'wb') or die('Error creando archivo.');
+            try {
+                $files = fopen($filename, 'wb') or die('Error creando archivo.');
+            } catch (IOException $exception) {
+                log((float)$exception);
+            }
             $words = '---------- Registros del CRON JOB ---------'."\n";
             fwrite($files, $words) or die('No pudimos escribir el registro');
             fclose($files);
