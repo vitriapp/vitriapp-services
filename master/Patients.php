@@ -34,7 +34,7 @@ require_once __DIR__ . '/Responses.php';
 class Patients
 {
 
-    private string $table = 'pacientes';
+    private string $_table = 'pacientes';
     private string $codeUser = '';
     private string $identity = '';
     private string $nameUser = '';
@@ -105,9 +105,9 @@ class Patients
             return $response->unauthorized();
         }
         $this->token = $array['token'];
-        $array_token =   $this->findToken();
+        $value =   $this->findToken();
 
-        return $this->postProcessSave($array_token, $json);
+        return $this->postProcessSave($value, $json);
     }
 
     /**
@@ -128,9 +128,9 @@ class Patients
             return $responses->unauthorized();
         }
         $this->token = $information['token'];
-        $array_token =   $this->findToken();
+        $array =   $this->findToken();
 
-        return $this->putProcessUpdate($array_token, $json);
+        return $this->putProcessUpdate($array, $json);
     }
 
     /**
@@ -202,16 +202,16 @@ class Patients
      *
      * This method return result execute query for delete patient
      *
-     * @param array  $array_token data text field
-     * @param string $json        data text field
+     * @param array  $array data text field
+     * @param string $json  data text field
      *
      * @return string | int | mixed
      * @throws JsonException
      */
-    private function delProcessDelete(array $array_token, string $json):array
+    private function delProcessDelete(array $array, string $json):array
     {
         $responses = new Responses();
-        if ($array_token) {
+        if ($array) {
             return $this->deleteValidate($json);
         }
         return $responses->unauthorized(Constant::INVALID_TOKEN);
@@ -425,7 +425,7 @@ class Patients
     private function insertPatient():int
     {
         $process = new Executor();
-        $query = 'INSERT INTO ' . $this->table . "
+        $query = 'INSERT INTO ' . $this->_table . "
         (DNI,Nombre,Direccion,CodigoPostal,Telefono,Genero,FechaNacimiento,Correo)
         values
         (
@@ -468,7 +468,7 @@ class Patients
     private function updatePatient():int
     {
         $process = new Executor();
-        $query = 'UPDATE ' . $this->table . "
+        $query = 'UPDATE ' . $this->_table . "
         SET 
         Nombre ='" . $this->nameUser . "',
         Direccion = '" . $this->address . "', 
@@ -497,7 +497,7 @@ class Patients
     private function deletePatient():int
     {
         $process = new Executor();
-        $query = 'DELETE FROM ' . $this->table . " 
+        $query = 'DELETE FROM ' . $this->_table . " 
         WHERE 
         PacienteId= '" . $this->codeUser . "'";
         $respond = $process->nonQuery($query);
