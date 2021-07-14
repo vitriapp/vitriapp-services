@@ -96,8 +96,8 @@ class Authentication
     {
         $response = new Responses();
         $codes = Constant::USER_ID;
-        $passwordText = Constant::W_PASS;
-        if (crypt($password, $array[0][$passwordText]) === $array[0][$passwordText]) {
+        $passText = Constant::W_PASS;
+        if (crypt($password, $array[0][$passText]) === $array[0][$passText]) {
             return $this->getToken($array[0][Constant::W_STATE], $array[0][$codes]);
         }
         return $response->incorrectData(Constant::INVALID_PASSWORD);

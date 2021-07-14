@@ -34,7 +34,7 @@ require_once __DIR__ . '/Responses.php';
 class Patients
 {
 
-    private string $_tablePatients = 'pacientes';
+    private string $tablePatients = 'pacientes';
     private string $codeUser = '';
     private string $identity = '';
     private string $nameUser = '';
@@ -425,7 +425,7 @@ class Patients
     private function insertPatient():int
     {
         $process = new Executor();
-        $query = 'INSERT INTO ' . $this->_tablePatients . "
+        $query = 'INSERT INTO ' . $this->tablePatients . "
         (DNI,Nombre,Direccion,CodigoPostal,Telefono,Genero,FechaNacimiento,Correo)
         values
         (
@@ -468,7 +468,7 @@ class Patients
     private function updatePatient():int
     {
         $process = new Executor();
-        $query = 'UPDATE ' . $this->_tablePatients . "
+        $query = 'UPDATE ' . $this->tablePatients . "
         SET 
         Nombre ='" . $this->nameUser . "',
         Direccion = '" . $this->address . "', 
@@ -497,7 +497,7 @@ class Patients
     private function deletePatient():int
     {
         $process = new Executor();
-        $query = 'DELETE FROM ' . $this->_tablePatients . " 
+        $query = 'DELETE FROM ' . $this->tablePatients . " 
         WHERE 
         PacienteId= '" . $this->codeUser . "'";
         $respond = $process->nonQuery($query);
