@@ -34,7 +34,7 @@ require_once __DIR__ . '/Responses.php';
 class Patients
 {
 
-    private string $_table = 'pacientes';
+    private string $_tablePatients = 'pacientes';
     private string $codeUser = '';
     private string $identity = '';
     private string $nameUser = '';
@@ -56,7 +56,7 @@ class Patients
      * @return mixed | int
      * @throws JsonException
      */
-    final public function listPatients(int $page = 1):array
+    final public function _listPatients(int $page = 1):array
     {
         $process = new Executor();
         $initial  = 0 ;
@@ -425,7 +425,7 @@ class Patients
     private function insertPatient():int
     {
         $process = new Executor();
-        $query = 'INSERT INTO ' . $this->_table . "
+        $query = 'INSERT INTO ' . $this->_tablePatients . "
         (DNI,Nombre,Direccion,CodigoPostal,Telefono,Genero,FechaNacimiento,Correo)
         values
         (
@@ -468,7 +468,7 @@ class Patients
     private function updatePatient():int
     {
         $process = new Executor();
-        $query = 'UPDATE ' . $this->_table . "
+        $query = 'UPDATE ' . $this->_tablePatients . "
         SET 
         Nombre ='" . $this->nameUser . "',
         Direccion = '" . $this->address . "', 
@@ -497,7 +497,7 @@ class Patients
     private function deletePatient():int
     {
         $process = new Executor();
-        $query = 'DELETE FROM ' . $this->_table . " 
+        $query = 'DELETE FROM ' . $this->_tablePatients . " 
         WHERE 
         PacienteId= '" . $this->codeUser . "'";
         $respond = $process->nonQuery($query);
