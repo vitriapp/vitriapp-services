@@ -37,7 +37,7 @@ if ($constant->method() === Constant::GET_DATA) {
     if (isset($value)) {
         $pages = $value;
         try {
-            $list_patients = $patients->_listPatients((int)$pages);
+            $list_patients = $patients->listPatients((int)$pages);
         } catch (JsonException $exception) {
             log((float)$exception);
         }

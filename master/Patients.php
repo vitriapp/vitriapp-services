@@ -56,7 +56,7 @@ class Patients
      * @return mixed | int
      * @throws JsonException
      */
-    final public function _listPatients(int $page = 1):array
+    final public function listPatients(int $page = 1):array
     {
         $process = new Executor();
         $initial  = 0 ;
@@ -151,9 +151,9 @@ class Patients
             return $responses->unauthorized();
         }
         $this->token = $information['token'];
-        $array_token =   $this->findToken();
+        $arrayToken =   $this->findToken();
 
-        return $this->delProcessDelete($array_token, $json);
+        return $this->delProcessDelete($arrayToken, $json);
     }
 
     /**
@@ -544,10 +544,10 @@ class Patients
      */
     private function updateToken(string $token):int
     {
-        $user_table = 'usuarios_token';
+        $userTable = 'usuarios_token';
         $process = new Executor();
         $datetime = date('Y-m-d H:i');
-        $query = 'UPDATE ' . $user_table . " 
+        $query = 'UPDATE ' . $userTable . " 
                 SET Fecha = '$datetime' 
                 WHERE TokenId = '$token' ";
         $respond = $process->nonQuery($query);
