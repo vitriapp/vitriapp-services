@@ -18,12 +18,12 @@ namespace services\cron;
 use JsonException;
 use services\master\Unique;
 
-require_once __DIR__ . '/../master/Unique.php';
+require_once '../master/Unique.php';
 
 $token = new Unique();
 $datetime = date('Y-m-d H:i');
 try {
-    echo $token->updateToken($datetime);
+    $token->updateToken($datetime);
 } catch (JsonException $exception) {
     log((float)$exception);
 }
