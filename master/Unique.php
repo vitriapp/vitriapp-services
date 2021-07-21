@@ -19,7 +19,7 @@ use JsonException;
 use services\master\connection\Executor;
 use Symfony\Component\Filesystem\Exception\IOException;
 
-require_once __DIR__ . '/connection/Executor.php';
+require_once 'connection/Executor.php';
 
 /**
  * Class Unique
@@ -73,18 +73,27 @@ class Unique
         $files = '';
         if (!file_exists($filename)) {
             try {
-                $files = fopen($filename, 'wb') or die('Error creando archivo.');
+                $files = fopen($filename, 'wb');
             } catch (IOException $exception) {
                 log((float)$exception);
             }
             $words = '---------- Registros del CRON JOB ---------'."\n";
-            fwrite($files, $words) or die('No pudimos escribir el registro');
+            try {
+                fwrite($files, $words);
+            } catch (IOException $exception) {
+                log((float)$exception);
+            }
+
             fclose($files);
         }
         $datetime = date('Y-m-d H:i');
-        $files = fopen($filename, 'ab') or die('Error abrir archivo registro');
+        $files = fopen($filename, 'ab');
         $words = 'Editados '.$registers .' dato(s) el dia ['.$datetime.']'."\n";
-        fwrite($files, $words) or die('No pudimos escribir el registro');
+        try {
+            fwrite($files, $words);
+        } catch (IOException $exception) {
+            log((float)$exception);
+        }
         fclose($files);
         return '';
     }
