@@ -17,7 +17,7 @@ use services\master\Responses;
 use services\master\Authentication;
 use \services\set\Constant;
 
-require_once __DIR__ . '/master/Authentication.php';
+require_once 'master/Authentication.php';
 require_once __DIR__ . '/master/Responses.php';
 
 $authentication = new Authentication();
