@@ -17,15 +17,18 @@ use services\master\Responses;
 use services\master\Authentication;
 use \services\set\Constant;
 
-require_once 'master/Authentication.php';
-require_once __DIR__ . '/master/Responses.php';
+include_once 'master/Authentication.php';
+include_once 'master/Responses.php';
 
 $authentication = new Authentication();
 $response = new Responses();
 $constant = new Constant();
 
 if ($constant->method() === Constant::POST_DATA) {
-    $information = file_get_contents(Constant::PHP_INPUT);
+    if (false === ($information = file_get_contents(Constant::PHP_INPUT))) {
+        exit;
+    }
+
     try {
         $array = $authentication->login($information);
     } catch (JsonException $exception) {
@@ -40,17 +43,9 @@ if ($constant->method() === Constant::POST_DATA) {
     } else {
         http_response_code(200);
     }
-    try {
-        echo json_encode($array, JSON_THROW_ON_ERROR);
-    } catch (JsonException $exception) {
-        log((float)$exception);
-    }
+    print_r($array, JSON_THROW_ON_ERROR);
 } else {
     header(Constant::CONTENT_TYPE_JSON);
     $array = $response->methodNotAllowed();
-    try {
-        echo json_encode($array, JSON_THROW_ON_ERROR);
-    } catch (JsonException $exception) {
-        log((float)$exception);
-    }
+    print_r($array, JSON_THROW_ON_ERROR);
 }

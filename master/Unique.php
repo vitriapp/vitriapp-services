@@ -69,32 +69,22 @@ class Unique
      */
     final public function enterWrite(int $registers):string
     {
-        $filename = '../cron/registros/registros.txt';
-        $files = '';
-        if (!file_exists($filename)) {
-            try {
-                $files = fopen($filename, 'wb');
-            } catch (IOException $exception) {
-                log((float)$exception);
-            }
-            $words = '---------- Registros del CRON JOB ---------'."\n";
-            try {
-                fwrite($files, $words);
-            } catch (IOException $exception) {
-                log((float)$exception);
-            }
-
-            fclose($files);
-        }
-        $datetime = date('Y-m-d H:i');
-        $files = fopen($filename, 'ab');
-        $words = 'Editados '.$registers .' dato(s) el dia ['.$datetime.']'."\n";
         try {
+            $filename = '../cron/registros/registros.txt';
+            if (!file_exists($filename)) {
+                $files = fopen($filename, 'wb');
+                $words = '---------- Registros del CRON JOB ---------'."\n";
+                fwrite($files, $words);
+                fclose($files);
+            }
+            $datetime = date('Y-m-d H:i');
+            $files = fopen($filename, 'ab');
+            $words = 'Editados '.$registers .' dato(s) el dia ['.$datetime.']'."\n";
             fwrite($files, $words);
+            fclose($files);
         } catch (IOException $exception) {
             log((float)$exception);
         }
-        fclose($files);
         return '';
     }
 }
