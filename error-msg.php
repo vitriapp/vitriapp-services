@@ -13,26 +13,30 @@ declare(strict_types=1);
  * @link     https://www.vitriapp.com PHP License 1.0
  */
 
-$http_status = filter_input(INPUT_SERVER, 'REDIRECT_STATUS', FILTER_SANITIZE_STRING);
+$status = filter_input(
+    INPUT_SERVER,
+    'REDIRECT_STATUS',
+    FILTER_SANITIZE_STRING
+);
 
-if ($http_status===200) {
-    print_r('Document has been processed and sent to you.+', null);
+if ($status===200) {
+    print_r('Document has been processed and sent to you.+', false);
 }
-if ($http_status===400) {
-    print_r('Bad HTTP request.+', null);
+if ($status===400) {
+    print_r('Bad HTTP request.+', false);
 }
-if ($http_status===401) {
-    print_r('Unauthorized - Invalid password.+', null);
+if ($status===401) {
+    print_r('Unauthorized - Invalid password.+', false);
 }
-if ($http_status===403) {
-    print_r('Forbidden.+', null);
+if ($status===403) {
+    print_r('Forbidden.+', false);
 }
-if ($http_status===403) {
-    print_r('Error.+', null);
+if ($status===403) {
+    print_r('Error.+', false);
 }
-if ($http_status===500) {
-    print_r('Internal Server Error.+', null);
+if ($status===500) {
+    print_r('Internal Server Error.+', false);
 }
-if ($http_status===418) {
-    print_r('Im a teapot! - This is a real value.+', null);
+if ($status===418) {
+    print_r('Im a teapot! - This is a real value.+', false);
 }
