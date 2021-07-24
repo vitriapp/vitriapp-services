@@ -18,7 +18,7 @@ namespace services\cron;
 use JsonException;
 use services\master\Unique;
 
-require_once '../master/Unique.php';
+include '../master/Unique.php';
 
 $token = new Unique();
 $datetime = date('Y-m-d H:i');
