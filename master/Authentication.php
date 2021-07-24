@@ -20,10 +20,8 @@ use services\master\connection\Executor;
 use services\set\Constant;
 use services\master\libs\Hash;
 
-require_once __DIR__ . '/connection/Executor.php';
-require_once __DIR__ . '/Responses.php';
-require_once __DIR__ . '/../set/Constant.php';
-require_once __DIR__ . '/libs/Hash.php';
+include 'connection/Executor.php';
+include 'libs/Hash.php';
 
 /**
  * Class Authentication
