@@ -17,8 +17,8 @@ use services\master\Responses;
 use services\master\Authentication;
 use \services\set\Constant;
 
-include_once 'master/Authentication.php';
-include_once 'master/Responses.php';
+include 'master/Authentication.php';
+include 'master/Responses.php';
 
 $authentication = new Authentication();
 $response = new Responses();
