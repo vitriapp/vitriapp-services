@@ -16,23 +16,23 @@ declare(strict_types=1);
 $http_status = filter_input(INPUT_SERVER, 'REDIRECT_STATUS', FILTER_SANITIZE_STRING);
 
 if ($http_status===200) {
-    print 'Document has been processed and sent to you.+';
+    print_r('Document has been processed and sent to you.+', null);
 }
 if ($http_status===400) {
-    print 'Bad HTTP request.+';
+    print_r('Bad HTTP request.+', null);
 }
 if ($http_status===401) {
-    print 'Unauthorized - Invalid password.+';
+    print_r('Unauthorized - Invalid password.+', null);
 }
 if ($http_status===403) {
-    print 'Forbidden.+';
+    print_r('Forbidden.+', null);
 }
 if ($http_status===403) {
-    print 'Error.+';
+    print_r('Error.+', null);
 }
 if ($http_status===500) {
-    print 'Internal Server Error.+';
+    print_r('Internal Server Error.+', null);
 }
 if ($http_status===418) {
-    print 'Im a teapot! - This is a real value.+';
+    print_r('Im a teapot! - This is a real value.+', null);
 }
