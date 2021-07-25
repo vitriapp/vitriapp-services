@@ -64,7 +64,7 @@ if ($constant->method() === Constant::GET_DATA) {
         http_response_code(200);
     }
     try {
-        echo json_encode($data_array, JSON_THROW_ON_ERROR);
+        print_r(json_encode($data_array, JSON_THROW_ON_ERROR), false);
     } catch (JsonException $exception) {
         log((float)$exception);
     }
