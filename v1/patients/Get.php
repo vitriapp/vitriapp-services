@@ -14,9 +14,7 @@ declare(strict_types=1);
 namespace services\v1;
 
 use JsonException;
-use services\master\connection\Executor;
 use services\master\Patients;
-use services\master\Responses;
 use services\set\Constant;
 
 /**
@@ -48,13 +46,13 @@ class Get
         try {
             $list_patients = $patients->listPatients($pages);
         } catch (JsonException $exception) {
-            log((float)$exception);
+            log($exception->getMessage());
         }
         header(Constant::CONTENT_TYPE_JSON);
         try {
-            echo json_encode($list_patients, JSON_THROW_ON_ERROR);
+            print_r(json_encode($list_patients, JSON_THROW_ON_ERROR), false);
         } catch (JsonException $exception) {
-            log((float)$exception);
+            log($exception->getMessage());
         }
 
         return http_response_code(200);
@@ -77,13 +75,13 @@ class Get
         try {
             $data_patients = $patient->getPatient($id_patients);
         } catch (JsonException $exception) {
-            log((float)$exception);
+            log($exception->getMessage());
         }
         header(Constant::CONTENT_TYPE_JSON);
         try {
-            echo json_encode($data_patients, JSON_THROW_ON_ERROR);
+            print_r(json_encode($data_patients, JSON_THROW_ON_ERROR), false);
         } catch (JsonException $exception) {
-            log((float)$exception);
+            log($exception->getMessage());
         }
 
         return http_response_code(200);
