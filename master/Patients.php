@@ -19,8 +19,8 @@ use JsonException;
 use services\master\connection\Executor;
 use services\set\Constant;
 
-require_once __DIR__ . '/connection/Executor.php';
-require_once __DIR__ . '/Responses.php';
+require_once 'connection/Executor.php';
+require_once 'Responses.php';
 
 /**
  * Class Patients
