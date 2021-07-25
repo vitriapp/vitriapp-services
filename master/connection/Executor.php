@@ -17,7 +17,7 @@ namespace services\master\connection;
 
 use JsonException;
 
-require_once __DIR__ . '/Connection.php';
+require_once 'Connection.php';
 
 /**
  * Class Process
