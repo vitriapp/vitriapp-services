@@ -1,13 +1,4 @@
 <?php
-/**
- * PHP version 7.4
- *
- * @Date: 2021/7/24 11:16:51
- * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
- * @category Developer
- * @package  Vitriapp
- * @license  Commercial
- */
 
 declare(strict_types=1);
 
