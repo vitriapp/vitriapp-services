@@ -51,7 +51,7 @@ class Constant
     public const ERROR_ID = 'error_id';
     public const ERROR_MSG = 'error_msg';
     public const STATUS = 'status';
-    public const ERROR = 'error';
+    public const ERROR = 'Error';
     public const METHOD_NOT_ALLOWED = 'Metodo no permitido';
     public const INCORRECT = 'Datos incorrectos';
     public const FORMAT_NOT_CORRECT = 'Datos incompletos o con formato incorrecto';
@@ -63,7 +63,7 @@ class Constant
     public const PUT_DATA = 'PUT';
     public const DELETE_DATA = 'DELETE';
     public const CONTENT_TYPE_JSON = 'Content-Type: application/json';
-    public const INVALID_TOKEN = 'El token que envio es invalido o ha caducado';
+    public const INVALID_TOKEN = 'Token sent is invalid or has expired';
 
     /**
      * Environment

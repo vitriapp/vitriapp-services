@@ -19,8 +19,6 @@ use JsonException;
 use mysqli;
 use services\set\Constant;
 
-require_once __DIR__ . '/../../set/Constant.php';
-
 /**
  * Class Connection
  *

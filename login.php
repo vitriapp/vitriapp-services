@@ -13,12 +13,13 @@ declare(strict_types=1);
  * @link     https://www.vitriapp.com PHP License 1.0
  */
 
-use services\master\Responses;
 use services\master\Authentication;
+use services\master\Responses;
 use \services\set\Constant;
 
-include 'master/Authentication.php';
-include 'master/Responses.php';
+require_once 'master/Authentication.php';
+require_once 'master/Responses.php';
+require_once 'set/Constant.php';
 
 $authentication = new Authentication();
 $response = new Responses();

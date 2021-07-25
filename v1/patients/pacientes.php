@@ -1,4 +1,13 @@
 <?php
+/**
+ * PHP version 7.4
+ *
+ * @Date: 2021/7/24 11:16:51
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @category Developer
+ * @package  Vitriapp
+ * @license  Commercial
+ */
 
 declare(strict_types=1);
 
@@ -20,58 +29,35 @@ use services\master\Responses;
 use services\master\Patients;
 use services\set\Constant;
 
-require_once __DIR__ . '/../set/Constant.php';
-require_once __DIR__ . '/../master/Patients.php';
+require_once '../../master/Responses.php';
+require_once '../../master/Patients.php';
+require_once '../../set/Constant.php';
+require_once 'Get.php';
 
 $responses = new Responses();
 $patients = new Patients();
 $constant = new Constant();
 $data_array = '';
 $information = '';
-$data_patients = '';
-$list_patients = '';
+$value = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+$id_user = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
 
 if ($constant->method() === Constant::GET_DATA) {
-    $value = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
-    $id_user = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+    $get = new Get();
     if (isset($value)) {
-        $pages = $value;
-        try {
-            $list_patients = $patients->listPatients((int)$pages);
-        } catch (JsonException $exception) {
-            log((float)$exception);
-        }
-        header(Constant::CONTENT_TYPE_JSON);
-        try {
-            echo json_encode($list_patients, JSON_THROW_ON_ERROR);
-        } catch (JsonException $exception) {
-            log((float)$exception);
-        }
-        http_response_code(200);
+        $get->variousPatients((int)$value);
     } elseif (isset($id_user)) {
-        $id_patients = $id_user;
-        try {
-            $data_patients = $patients->getPatient((int)$id_patients);
-        } catch (JsonException $exception) {
-            log((float)$exception);
-        }
-        header(Constant::CONTENT_TYPE_JSON);
-        try {
-            echo json_encode($data_patients, JSON_THROW_ON_ERROR);
-        } catch (JsonException $exception) {
-            log((float)$exception);
-        }
-        http_response_code(200);
+        $get->onePatients((int)$id_user);
     }
 } elseif ($constant->method() === Constant::POST_DATA) {
-    /**
-     *We receive the sent data
-     */
-    $information = file_get_contents(Constant::PHP_INPUT);
     /**
      *We send data to the handler
      */
     try {
+        /**
+         *We receive the sent data
+         */
+        $information = file_get_contents(Constant::PHP_INPUT);
         $data_array = $patients->postProcess($information);
     } catch (JsonException $exception) {
         log((float)$exception);
@@ -93,13 +79,13 @@ if ($constant->method() === Constant::GET_DATA) {
     }
 } elseif ($constant->method() === Constant::PUT_DATA) {
     /**
-     *We receive the sent data
-     */
-    $information = file_get_contents(Constant::PHP_INPUT);
-    /**
      *We send data to the handler
      */
     try {
+        /**
+         *We receive the sent data
+         */
+        $information = file_get_contents(Constant::PHP_INPUT);
         $data_array = $patients->putProcess($information);
     } catch (JsonException $exception) {
         log((float)$exception);

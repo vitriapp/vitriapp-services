@@ -20,8 +20,8 @@ use services\master\connection\Executor;
 use services\set\Constant;
 use services\master\libs\Hash;
 
-include 'connection/Executor.php';
-include 'libs/Hash.php';
+require_once 'connection/Executor.php';
+require_once 'libs/Hash.php';
 
 /**
  * Class Authentication
