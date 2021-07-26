@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -71,16 +72,16 @@ class Get
     final public function onePatients(int $idUser): int
     {
         $patient = new Patients();
-        $data_patients = '';
-        $id_patients = $idUser;
+        $dataPatients = '';
+        $idPatients = $idUser;
         try {
-            $data_patients = $patient->getPatient($id_patients);
+            $dataPatients = $patient->getPatient($idPatients);
         } catch (JsonException $exception) {
             log($exception->getMessage());
         }
         header(Constant::CONTENT_TYPE_JSON);
         try {
-            print_r(json_encode($data_patients, JSON_THROW_ON_ERROR), false);
+            print_r(json_encode($dataPatients, JSON_THROW_ON_ERROR), false);
         } catch (JsonException $exception) {
             log($exception->getMessage());
         }
