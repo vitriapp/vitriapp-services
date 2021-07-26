@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace services\v1;
 
 use JsonException;
-use services\master\Patients;
+use services\v1\patients\Patients;
 use services\set\Constant;
 
 /**
