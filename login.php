@@ -30,7 +30,7 @@ if ($constant->method() === Constant::POST_DATA) {
         $information = file_get_contents(Constant::PHP_INPUT);
         $array = $authentication->login($information);
     } catch (JsonException $exception) {
-        log((float)$exception);
+        log($exception->getMessage());
     }
 
     header(Constant::CONTENT_TYPE_JSON);
@@ -44,7 +44,7 @@ if ($constant->method() === Constant::POST_DATA) {
     try {
         print_r(json_encode($array, JSON_THROW_ON_ERROR), false);
     } catch (JsonException $exception) {
-        log((float)$exception);
+        log($exception->getMessage());
     }
 } else {
     header(Constant::CONTENT_TYPE_JSON);
@@ -52,6 +52,6 @@ if ($constant->method() === Constant::POST_DATA) {
     try {
         print_r(json_encode($array, JSON_THROW_ON_ERROR), false);
     } catch (JsonException $exception) {
-        log((float)$exception);
+        log($exception->getMessage());
     }
 }

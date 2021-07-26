@@ -1,4 +1,14 @@
 <?php
+/**
+ * PHP version 7.4
+ *
+ * @category Developer
+ * @package  Vitriapp
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @license  Commercial PHP License 1.0
+ * @Date:    2021/7/25 9:32:57
+ * @link     https://www.vitriapp.com PHP License 1.0
+ */
 
 declare(strict_types=1);
 
@@ -19,7 +29,7 @@ use JsonException;
 use services\master\connection\Executor;
 use Symfony\Component\Filesystem\Exception\IOException;
 
-require_once 'connection/Executor.php';
+require_once '../master/connection/Executor.php';
 
 /**
  * Class Unique
@@ -70,7 +80,7 @@ class Unique
     final public function enterWrite(int $registers):string
     {
         try {
-            $filename = '../cron/registros/registros.txt';
+            $filename = 'registros/registros.txt';
             if (!file_exists($filename)) {
                 $files = fopen($filename, 'wb');
                 $words = '---------- Registros del CRON JOB ---------'."\n";
