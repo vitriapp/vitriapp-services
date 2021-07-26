@@ -49,11 +49,10 @@ class Post
         }
         header(Constant::CONTENT_TYPE_JSON);
         if (isset($dataArray[Constant::RESULT][Constant::ERROR_ID])) {
-            $response_code = $dataArray[Constant::RESULT][Constant::ERROR_ID];
-            http_response_code($response_code);
-        } else {
-            http_response_code(200);
+            $responseCode = $dataArray[Constant::RESULT][Constant::ERROR_ID];
+            http_response_code($responseCode);
         }
+        http_response_code(200);
         try {
             print_r(json_encode($dataArray, JSON_THROW_ON_ERROR), false);
         } catch (JsonException $exception) {

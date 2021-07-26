@@ -36,25 +36,20 @@ class Delete
      * This method is useful for remove information patients
      *
      * @return mixed
+     * @throws JsonException
      */
     final public function removePatients(): string
     {
         $dataArray = '';
-        $information = '';
         $headers = getallheaders();
         $patients = new Patients();
+        $information = file_get_contents(Constant::PHP_INPUT);
         if (isset($headers[Constant::TOKEN], $headers['pacienteId'])) {
-            $send_data = [
+            $sendData = [
                 Constant::TOKEN => $headers[Constant::TOKEN],
                 'pacienteId' => $headers['pacienteId']
             ];
-            try {
-                $information = json_encode($send_data, JSON_THROW_ON_ERROR);
-            } catch (JsonException $exception) {
-                log($exception->getMessage());
-            }
-        } else {
-            $information = file_get_contents(Constant::PHP_INPUT);
+            $information = json_encode($sendData, JSON_THROW_ON_ERROR);
         }
         try {
             $dataArray = $patients->deleteProcess($information);
@@ -63,11 +58,10 @@ class Delete
         }
         header(Constant::CONTENT_TYPE_JSON);
         if (isset($dataArray[Constant::RESULT][Constant::ERROR_ID])) {
-            $response_code = $dataArray[Constant::RESULT][Constant::ERROR_ID];
-            http_response_code($response_code);
-        } else {
-            http_response_code(200);
+            $responseCode = $dataArray[Constant::RESULT][Constant::ERROR_ID];
+            http_response_code($responseCode);
         }
+        http_response_code(200);
         try {
             print_r(json_encode($dataArray, JSON_THROW_ON_ERROR), false);
         } catch (JsonException $exception) {
