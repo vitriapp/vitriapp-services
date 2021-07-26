@@ -42,16 +42,16 @@ class Get
     final public function variousPatients(int $value): int
     {
         $patients = new Patients();
-        $list_patients = '';
+        $listPatients = '';
         $pages = $value;
         try {
-            $list_patients = $patients->listPatients($pages);
+            $listPatients = $patients->listPatients($pages);
         } catch (JsonException $exception) {
             log($exception->getMessage());
         }
         header(Constant::CONTENT_TYPE_JSON);
         try {
-            print_r(json_encode($list_patients, JSON_THROW_ON_ERROR), false);
+            print_r(json_encode($listPatients, JSON_THROW_ON_ERROR), false);
         } catch (JsonException $exception) {
             log($exception->getMessage());
         }
@@ -64,15 +64,15 @@ class Get
      *
      * This method is useful for get specific one patient
      *
-     * @param int $id_user for one patient
+     * @param int $idUser for one patient
      *
      * @return mixed
      */
-    final public function onePatients(int $id_user): int
+    final public function onePatients(int $idUser): int
     {
         $patient = new Patients();
         $data_patients = '';
-        $id_patients = $id_user;
+        $id_patients = $idUser;
         try {
             $data_patients = $patient->getPatient($id_patients);
         } catch (JsonException $exception) {
