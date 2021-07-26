@@ -15,21 +15,22 @@ declare(strict_types=1);
 
 namespace services\v1;
 
-use JsonException;
-use services\master\Responses;
-use services\master\Patients;
 use services\set\Constant;
+use services\v1\patients\Post;
+use services\v1\patients\Put;
+use services\v1\patients\Delete;
+use services\v1\patients\Error;
 
 require_once '../../master/Responses.php';
-require_once '../../master/Patients.php';
 require_once '../../set/Constant.php';
+require_once 'Patients.php';
 require_once 'Get.php';
+require_once 'Post.php';
+require_once 'Put.php';
+require_once 'Delete.php';
+require_once 'Error.php';
 
-$responses = new Responses();
-$patients = new Patients();
 $constant = new Constant();
-$data_array = '';
-$information = '';
 $value = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
 $id_user = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
 
@@ -41,112 +42,15 @@ if ($constant->method() === Constant::GET_DATA) {
         $get->onePatients((int)$id_user);
     }
 } elseif ($constant->method() === Constant::POST_DATA) {
-    /**
-     *We send data to the handler
-     */
-    try {
-        /**
-         *We receive the sent data
-         */
-        $information = file_get_contents(Constant::PHP_INPUT);
-        $data_array = $patients->postProcess($information);
-    } catch (JsonException $exception) {
-        log((float)$exception);
-    }
-    /**
-     *Let's give an answer
-     */
-    header(Constant::CONTENT_TYPE_JSON);
-    if (isset($data_array[Constant::RESULT][Constant::ERROR_ID])) {
-        $response_code = $data_array[Constant::RESULT][Constant::ERROR_ID];
-        http_response_code($response_code);
-    } else {
-        http_response_code(200);
-    }
-    try {
-        print_r(json_encode($data_array, JSON_THROW_ON_ERROR), false);
-    } catch (JsonException $exception) {
-        log((float)$exception);
-    }
+    $post = new Post();
+    $post->addPatients();
 } elseif ($constant->method() === Constant::PUT_DATA) {
-    /**
-     *We send data to the handler
-     */
-    try {
-        /**
-         *We receive the sent data
-         */
-        $information = file_get_contents(Constant::PHP_INPUT);
-        $data_array = $patients->putProcess($information);
-    } catch (JsonException $exception) {
-        log((float)$exception);
-    }
-    /**
-     *Let's give an answer
-     */
-    header(Constant::CONTENT_TYPE_JSON);
-    if (isset($data_array[Constant::RESULT][Constant::ERROR_ID])) {
-        $response_code = $data_array[Constant::RESULT][Constant::ERROR_ID];
-        http_response_code($response_code);
-    } else {
-        http_response_code(200);
-    }
-    try {
-        echo json_encode($data_array, JSON_THROW_ON_ERROR);
-    } catch (JsonException $exception) {
-        log((float)$exception);
-    }
+    $put = new Put();
+    $put->editPatients();
 } elseif ($constant->method() === Constant::DELETE_DATA) {
-    $headers = getallheaders();
-    if (isset($headers[Constant::TOKEN], $headers['pacienteId'])) {
-        /**
-         *We receive the data sent by the header
-         */
-        $send_data = [
-            Constant::TOKEN => $headers[Constant::TOKEN],
-            'pacienteId' => $headers['pacienteId']
-        ];
-        try {
-            $information = json_encode($send_data, JSON_THROW_ON_ERROR);
-        } catch (JsonException $exception) {
-            log((float)$exception);
-        }
-    } else {
-        /**
-         *We receive the sent data
-         */
-        $information = file_get_contents(Constant::PHP_INPUT);
-    }
-
-    /**
-     *We send data to the handler
-     */
-    try {
-        $data_array = $patients->deleteProcess($information);
-    } catch (JsonException $exception) {
-        log((float)$exception);
-    }
-    /**
-     *Let's give an answer
-     */
-    header(Constant::CONTENT_TYPE_JSON);
-    if (isset($data_array[Constant::RESULT][Constant::ERROR_ID])) {
-        $response_code = $data_array[Constant::RESULT][Constant::ERROR_ID];
-        http_response_code($response_code);
-    } else {
-        http_response_code(200);
-    }
-    try {
-        echo json_encode($data_array, JSON_THROW_ON_ERROR);
-    } catch (JsonException $exception) {
-        log((float)$exception);
-    }
+    $delete = new Delete();
+    $delete->removePatients();
 } else {
-    header(Constant::CONTENT_TYPE_JSON);
-    $data_array = $responses->methodNotAllowed();
-    try {
-        echo json_encode($data_array, JSON_THROW_ON_ERROR);
-    } catch (JsonException $exception) {
-        log((float)$exception);
-    }
+    $error = new Error();
+    $error->display();
 }

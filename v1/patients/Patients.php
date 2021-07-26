@@ -1,4 +1,14 @@
 <?php
+/**
+ * PHP version 7.4
+ *
+ * @category Developer
+ * @package  Vitriapp
+ * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
+ * @license  Commercial PHP License 1.0
+ * @Date:    2021/7/25 9:22:59
+ * @link     https://www.vitriapp.com PHP License 1.0
+ */
 
 declare(strict_types=1);
 
@@ -13,14 +23,15 @@ declare(strict_types=1);
  * @link     https://www.vitriapp.com PHP License 1.0
  */
 
-namespace services\master;
+namespace services\v1\patients;
 
 use JsonException;
 use services\master\connection\Executor;
+use services\master\Responses;
 use services\set\Constant;
 
-require_once 'connection/Executor.php';
-require_once 'Responses.php';
+require_once '../../master/connection/Executor.php';
+require_once '../../master/Responses.php';
 
 /**
  * Class Patients
