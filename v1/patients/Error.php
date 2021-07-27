@@ -43,6 +43,7 @@ class Error
         $responses = new Responses();
         header(Constant::CONTENT_TYPE_JSON);
         $dataArray = $responses->methodNotAllowed();
+        header('Allow: GET, POST, PUT, DELETE');
         try {
             print_r(json_encode($dataArray, JSON_THROW_ON_ERROR), false);
         } catch (JsonException $exception) {
