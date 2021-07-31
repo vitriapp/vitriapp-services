@@ -2,6 +2,7 @@
 RewriteEngine On
 
 Options -Indexes
+Options All -Indexes
 
 # esta lineas son para quitar la ext .php
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -26,10 +27,10 @@ ErrorDocument 400 /error-msg.php
 ErrorDocument 401 /error-msg.php
 ErrorDocument 403 /error-msg.php
 
-<Files .htaccess>
+<FilesMatch "\.(htaccess|htpasswd|ini|phps|fla|psd|log|sh)$">
 Order allow,deny
 Deny from all
-</Files>
+</FilesMatch>
 
 <IfModule mod_expires.c>
 	ExpiresActive On
@@ -44,3 +45,18 @@ Deny from all
 	ExpiresByType application/javascript A432000
 	ExpiresByType application/x-javascript A432000
 </IfModule>
+
+# Restricted access to files
+<FilesMatch "((\.(lock|cache|db))|CHANGELOG.md|README.md|^(.*\.config|.*\.example)(.*?))$">
+	# Apache < 2.3
+	<IfModule !mod_authz_core.c>
+		Order allow,deny
+		Deny from all
+		Satisfy All
+	</IfModule>
+
+	# Apache ≥ 2.3
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+</FilesMatch>

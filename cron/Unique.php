@@ -1,14 +1,4 @@
 <?php
-/**
- * PHP version 7.4
- *
- * @category Developer
- * @package  Vitriapp
- * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
- * @license  Commercial PHP License 1.0
- * @Date:    2021/7/25 9:32:57
- * @link     https://www.vitriapp.com PHP License 1.0
- */
 
 declare(strict_types=1);
 
@@ -19,7 +9,7 @@ declare(strict_types=1);
  * @package  Vitriapp
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
- * @Date:    2021/6/14 0:19:41
+ * @Date:    2021/7/25 9:32:57
  * @link     https://www.vitriapp.com PHP License 1.0
  */
 

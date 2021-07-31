@@ -1,14 +1,4 @@
 <?php
-/**
- * PHP version 7.4
- *
- * @category Developer
- * @package  Vitriapp
- * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
- * @license  Commercial PHP License 1.0
- * @Date:    2021/7/25 9:22:59
- * @link     https://www.vitriapp.com PHP License 1.0
- */
 
 declare(strict_types=1);
 
@@ -19,11 +9,11 @@ declare(strict_types=1);
  * @package  Vitriapp
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
- * @Date:    2021/6/14 0:19:41
+ * @Date:    2021/7/29 9:3:4
  * @link     https://www.vitriapp.com PHP License 1.0
  */
 
-namespace services\v1\patients;
+namespace services\v1\model;
 
 use JsonException;
 use services\master\connection\Executor;
@@ -91,7 +81,7 @@ class Patients
      * @return mixed | int
      * @throws JsonException
      */
-    final public function getPatient(int $codes):array
+    final public function getPatients(int $codes):array
     {
         $process = new Executor();
         $query = "CALL get_patient($codes)";
@@ -99,16 +89,17 @@ class Patients
     }
 
     /**
-     * Send data process post
+     * Action process
      *
-     * This method is useful for get one patient from code
+     * This method is useful for execute various actions required
      *
-     * @param string $json for show data from code patient
+     * @param string $json   for show data from response
+     * @param string $option for execute process
      *
      * @return mixed
      * @throws JsonException
      */
-    final public function postProcess(string $json):array
+    final public function actionProcess(string $json, string $option):array
     {
         $response = new Responses();
         $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
@@ -118,53 +109,15 @@ class Patients
         $this->token = $array['token'];
         $value =   $this->findToken();
 
-        return $this->postProcessSave($value, $json);
-    }
-
-    /**
-     * Send data process put
-     *
-     * This method is useful for get one patient from code
-     *
-     * @param string $json for show data from code patient
-     *
-     * @return mixed
-     * @throws JsonException
-     */
-    final public function putProcess(string $json):array
-    {
-        $responses = new Responses();
-        $information = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        if (!isset($information['token'])) {
-            return $responses->unauthorized();
+        if ($option === 'post') {
+            return $this->executeProcess($value, $json, 'post');
         }
-        $this->token = $information['token'];
-        $array =   $this->findToken();
-
-        return $this->putProcessUpdate($array, $json);
-    }
-
-    /**
-     * Delete patients with id from database
-     *
-     * This method is useful for delete one patient from code
-     *
-     * @param string $json for show data from code patient
-     *
-     * @return mixed
-     * @throws JsonException
-     */
-    final public function deleteProcess(string $json):array
-    {
-        $responses = new Responses();
-        $information = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        if (!isset($information['token'])) {
-            return $responses->unauthorized();
+        if ($option === 'put') {
+            $execute = $this->executeProcess($value, $json, 'put');
+        } else {
+            $execute = $this->executeProcess($value, $json, 'delete');
         }
-        $this->token = $information['token'];
-        $arrayToken =   $this->findToken();
-
-        return $this->delProcessDelete($arrayToken, $json);
+        return $execute;
     }
 
     /**
@@ -174,58 +127,26 @@ class Patients
      *
      * @param array  $arrayToken data text field
      * @param string $json       data text field
+     * @param string $option     for execute process
      *
      * @return string | int | mixed
      * @throws JsonException
      */
-    private function postProcessSave(array $arrayToken, string $json):array
+    private function executeProcess(array $arrayToken, string $json, string $option):array
     {
         $response = new Responses();
         if ($arrayToken) {
-            return $this->postValidate($json);
+            if ($option === 'post') {
+                return $this->postValidate($json);
+            }
+            if ($option === 'put') {
+                $execute = $this->putValidate($json);
+            } else {
+                $execute = $this->deleteValidate($json);
+            }
+            return $execute;
         }
         return $response->unauthorized(Constant::INVALID_TOKEN);
-    }
-
-    /**
-     * Put process update
-     *
-     * This method return result execute query for update patient
-     *
-     * @param array  $arrayToken data text field
-     * @param string $json       data text field
-     *
-     * @return string | int | mixed
-     * @throws JsonException
-     */
-    private function putProcessUpdate(array $arrayToken, string $json):array
-    {
-        $responses = new Responses();
-        if ($arrayToken) {
-            return $this->putValidate($json);
-        }
-
-        return $responses->unauthorized(Constant::INVALID_TOKEN);
-    }
-
-    /**
-     * Delete process
-     *
-     * This method return result execute query for delete patient
-     *
-     * @param array  $array data text field
-     * @param string $json  data text field
-     *
-     * @return string | int | mixed
-     * @throws JsonException
-     */
-    private function delProcessDelete(array $array, string $json):array
-    {
-        $responses = new Responses();
-        if ($array) {
-            return $this->deleteValidate($json);
-        }
-        return $responses->unauthorized(Constant::INVALID_TOKEN);
     }
 
     /**
