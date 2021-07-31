@@ -2,13 +2,14 @@
 RewriteEngine On
 
 Options -Indexes
+Options All -Indexes
 
 #Rules for patients object
 #Get
-RewriteRule ^pacientes/([0-9]+)$ patients/pacientes.php?id=$1
-RewriteRule ^pacientes/list$ patients/pacientes.php?page=$1
+RewriteRule ^pacientes/([0-9]+)$ view/pacientes.php?id=$1
+RewriteRule ^pacientes/list$ view/pacientes.php?page=1
 #Post, put, delete
-RewriteRule ^pacientes$ patients/pacientes.php
+RewriteRule ^pacientes$ view/pacientes.php
 
 
 # remove ext .php
@@ -31,3 +32,17 @@ Order allow,deny
 Deny from all
 </Files>
 
+# Restricted access to files
+<FilesMatch "((\.(lock|cache|db))|CHANGELOG.md|README.md|^(.*\.config|.*\.example)(.*?))$">
+	# Apache < 2.3
+	<IfModule !mod_authz_core.c>
+		Order allow,deny
+		Deny from all
+		Satisfy All
+	</IfModule>
+
+	# Apache ≥ 2.3
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+</FilesMatch>

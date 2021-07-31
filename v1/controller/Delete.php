@@ -9,14 +9,15 @@ declare(strict_types=1);
  * @package  Vitriapp
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
- * @Date:    2021/6/14 0:19:41
+ * @Date:    2021/7/30 8:31:22
  * @link     https://www.vitriapp.com PHP License 1.0
  */
 
-namespace services\v1\patients;
+namespace services\v1\controller;
 
 use JsonException;
 use services\set\Constant;
+use services\v1\model\Patients;
 
 /**
  * Class Delete for Patients
@@ -52,7 +53,7 @@ class Delete
             $information = json_encode($sendData, JSON_THROW_ON_ERROR);
         }
         try {
-            $dataArray = $patients->deleteProcess($information);
+            $dataArray = $patients->actionProcess($information, 'delete');
         } catch (JsonException $exception) {
             log($exception->getMessage());
         }

@@ -3,9 +3,6 @@ RewriteEngine On
 
 Options -Indexes
 
-RewriteRule ^pacientes/([0-9]+)$ pacientes.php?id=$1
-RewriteRule ^pacientes/list$ pacientes.php?page=$1
-
 # remove ext .php
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f

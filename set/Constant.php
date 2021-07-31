@@ -62,7 +62,7 @@ class Constant
     public const GET_DATA = 'GET';
     public const PUT_DATA = 'PUT';
     public const DELETE_DATA = 'DELETE';
-    public const CONTENT_TYPE_JSON = 'Content-Type: application/json';
+    public const CONTENT_TYPE_JSON = 'Content-Type:application/json;charset=utf-8';
     public const INVALID_TOKEN = 'Token sent is invalid or has expired';
 
     /**
