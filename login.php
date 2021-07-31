@@ -13,6 +13,9 @@ declare(strict_types=1);
  * @link     https://www.vitriapp.com PHP License 1.0
  */
 
+namespace services;
+
+use JsonException;
 use services\master\Authentication;
 use services\master\Responses;
 use \services\set\Constant;
@@ -26,6 +29,7 @@ $response = new Responses();
 $constant = new Constant();
 
 if ($constant->method() === Constant::POST_DATA) {
+    $array =  '';
     try {
         $information = file_get_contents(Constant::PHP_INPUT);
         $array = $authentication->login($information);
