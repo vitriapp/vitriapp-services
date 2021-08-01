@@ -19,6 +19,8 @@ use JsonException;
 use services\set\Constant;
 use services\v1\model\Patients;
 
+require_once '../model/Patients.php';
+
 /**
  * Class Post for Patients
  *

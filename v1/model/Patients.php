@@ -108,13 +108,14 @@ class Patients
         }
         $this->token = $array['token'];
         $value =   $this->findToken();
-
+        $execute = null;
         if ($option === 'post') {
             return $this->executeProcess($value, $json, 'post');
         }
         if ($option === 'put') {
             $execute = $this->executeProcess($value, $json, 'put');
-        } else {
+        }
+        if ($option === 'delete') {
             $execute = $this->executeProcess($value, $json, 'delete');
         }
         return $execute;
@@ -132,16 +133,21 @@ class Patients
      * @return string | int | mixed
      * @throws JsonException
      */
-    private function executeProcess(array $arrayToken, string $json, string $option):array
-    {
+    private function executeProcess(
+        array $arrayToken,
+        string $json,
+        string $option
+    ):array {
         $response = new Responses();
+        $execute  = null;
         if ($arrayToken) {
             if ($option === 'post') {
-                return $this->postValidate($json);
+                $execute = $this->postValidate($json);
             }
             if ($option === 'put') {
                 $execute = $this->putValidate($json);
-            } else {
+            }
+            if ($option === 'delete') {
                 $execute = $this->deleteValidate($json);
             }
             return $execute;

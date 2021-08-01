@@ -45,18 +45,16 @@ class Get extends General
      */
     public function __call(string $method, array $arguments): int
     {
+        $object = null;
         if (str_replace('show', '', $method) === $arguments[2]) {
             $object = $this->objectClass($arguments[2]);
-        } else {
-            $object = null;
         }
         try {
+            ${'list'.$arguments[2]} = $object->{'get'.$arguments[2]}(
+                $arguments[0]
+            );
             if ($arguments[1]) {
                 ${'list'.$arguments[2]} = $object->{'list'.$arguments[2]}(
-                    $arguments[0]
-                );
-            } else {
-                ${'list'.$arguments[2]} = $object->{'get'.$arguments[2]}(
                     $arguments[0]
                 );
             }

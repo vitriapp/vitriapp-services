@@ -59,7 +59,7 @@ class General
     {
         $result = strtolower($object);
         if ($result==='patients') {
-            require_once '../model/Patients.php';
+            include_once '../model/Patients.php';
             ${$result} = new Patients();
         }
         return ${$result};
