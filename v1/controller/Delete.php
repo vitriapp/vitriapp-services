@@ -17,7 +17,7 @@ namespace services\v1\controller;
 
 use JsonException;
 use services\set\Constant;
-use services\v1\model\Patients;
+use services\v1\General;
 
 /**
  * Class Delete for Patients
@@ -36,27 +36,37 @@ class Delete
      *
      * This method is useful for remove information patients
      *
+     * @param string $method    name method dynamic
+     * @param array  $arguments for search one or various results
+     *
      * @return mixed
      * @throws JsonException
      */
-    final public function removePatients(): string
+    final public function __call(string $method, array $arguments): string
     {
-        $dataArray = '';
         $headers = getallheaders();
-        $patients = new Patients();
+        $general = new General();
+        $validator = $general->objectClass(
+            str_replace(
+                'remove',
+                '',
+                $method
+            ),
+            'delete'
+        );
         $information = file_get_contents(Constant::PHP_INPUT);
-        if (isset($headers[Constant::TOKEN], $headers['pacienteId'])) {
+        if (isset($headers[Constant::TOKEN], $headers['id'])) {
             $sendData = [
                 Constant::TOKEN => $headers[Constant::TOKEN],
-                'pacienteId' => $headers['pacienteId']
+                'id' => $headers['id']
             ];
             $information = json_encode($sendData, JSON_THROW_ON_ERROR);
         }
-        try {
-            $dataArray = $patients->actionProcess($information, 'delete');
-        } catch (JsonException $exception) {
-            log($exception->getMessage());
-        }
+        $dataArray = $validator->actionProcess(
+            $information,
+            'delete',
+            $arguments[0]
+        );
         header(Constant::CONTENT_TYPE_JSON);
         if (isset($dataArray[Constant::RESULT][Constant::ERROR_ID])) {
             $responseCode = $dataArray[Constant::RESULT][Constant::ERROR_ID];

@@ -17,12 +17,14 @@ namespace services\v1\controller;
 
 use JsonException;
 use services\set\Constant;
-use services\v1\model\Patients;
+use services\v1\General;
 
-require_once '../model/Patients.php';
+require_once '../Validator.php';
+require_once '../../master/Responses.php';
+require_once '../../master/connection/Executor.php';
 
 /**
- * Class Post for Patients
+ * Class Post for class
  *
  * @category Developer
  * @package  Vitriapp
@@ -34,22 +36,21 @@ class Post
 {
 
     /**
-     * Add patients method for patients
+     * Add ENTITY method for patients
      *
      * This method is useful for insert patients
      *
+     * @param string $method    name method dynamic
+     * @param array  $arguments for search one or various results
+     *
      * @return mixed
      */
-    final public function addPatients(): string
+    public function __call(string $method, array $arguments): string
     {
-        $dataArray = '';
-        try {
-            $patients = new Patients();
-            $information = file_get_contents(Constant::PHP_INPUT);
-            $dataArray = $patients->actionProcess($information, 'post');
-        } catch (JsonException $exception) {
-            log($exception->getMessage());
-        }
+        $general = new General();
+        $validator = $general->objectClass(str_replace('add', '', $method), 'post');
+        $information = file_get_contents(Constant::PHP_INPUT);
+        $dataArray = $validator->actionProcess($information, 'post', $arguments[0]);
         header(Constant::CONTENT_TYPE_JSON);
         if (isset($dataArray[Constant::RESULT][Constant::ERROR_ID])) {
             $responseCode = $dataArray[Constant::RESULT][Constant::ERROR_ID];

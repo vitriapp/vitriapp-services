@@ -15,7 +15,10 @@ declare(strict_types=1);
 
 namespace services\v1;
 
-use services\v1\model\Patients;
+use JsonException;
+use services\master\connection\Executor;
+use services\master\Responses;
+use services\set\Regular;
 
 /**
  * Class General
@@ -40,10 +43,8 @@ class General
      */
     final public function method(string $method): string
     {
-        if ($method === 'pacientes') {
-            return "Patients";
-        }
-        return $method;
+        $result = new Regular();
+        return $result->results($method);
     }
 
     /**
@@ -52,16 +53,79 @@ class General
      * This method is useful for get method class
      *
      * @param string $object name object class
+     * @param string $action name action method
      *
      * @return object
      */
-    final public function objectClass(string $object): object
+    final public function objectClass(string $object, string $action): object
     {
-        $result = strtolower($object);
-        if ($result==='patients') {
-            include_once '../model/Patients.php';
-            ${$result} = new Patients();
+        if ($action === 'get') {
+            include_once sprintf("model/%s.php", $object);
+            $class = trim('services\v1\model\ ') . $object;
+            return new $class;
         }
-        return ${$result};
+            include_once 'Validator.php';
+        return new Validator();
+    }
+
+    /**
+     * Select class
+     *
+     * This method is useful for get method class
+     *
+     * @param string $object name object class
+     *
+     * @return object
+     */
+    final public function selectClass(string $object): object
+    {
+        include_once sprintf("../model/%s.php", $object);
+        $class = trim('services\v1\model\ ') . $object;
+        return new $class;
+    }
+
+    /**
+     * Validate identity
+     *
+     * This method return result validate identity user
+     *
+     * @param string $identity id user
+     *
+     * @return string | int | mixed
+     */
+    final public function validateIdentity(string $identity): string
+    {
+        $responses = new Responses();
+        if (!isset($identity)) {
+            return $responses->formatNotCorrect();
+        }
+        return '';
+    }
+
+    /**
+     * Find token
+     *
+     * This method return data token, user id and state from user
+     *
+     * @param string $token user
+     *
+     * @return string | int | mixed
+     * @throws JsonException
+     */
+    final public function findToken(string $token): array
+    {
+        $process = new Executor();
+        $query = "SELECT 
+        TokenId,
+        UsuarioId,
+        Estado 
+        from usuarios_token WHERE 
+        Token = '" . $token . "' AND 
+        Estado = 'Activo'";
+        $respond = $process->getData($query);
+        if ($respond) {
+            return $respond;
+        }
+        return [];
     }
 }

@@ -17,7 +17,9 @@ namespace services\v1\controller;
 
 use JsonException;
 use services\set\Constant;
-use services\v1\model\Patients;
+use services\v1\General;
+
+require_once '../Validator.php';
 
 /**
  * Class Put for Patients
@@ -36,18 +38,17 @@ class Put
      *
      * This method is useful for edit information patients
      *
+     * @param string $method    name method dynamic
+     * @param array  $arguments for search one or various results
+     *
      * @return mixed
      */
-    final public function editPatients(): string
+    final public function __call(string $method, array $arguments): string
     {
-        $dataArray = '';
-        try {
-            $patients = new Patients();
-            $information = file_get_contents(Constant::PHP_INPUT);
-            $dataArray = $patients->actionProcess($information, 'put');
-        } catch (JsonException $exception) {
-            log($exception->getMessage());
-        }
+        $general = new General();
+        $validator = $general->objectClass(str_replace('edit', '', $method), 'put');
+        $information = file_get_contents(Constant::PHP_INPUT);
+        $dataArray = $validator->actionProcess($information, 'put', $arguments[0]);
         header(Constant::CONTENT_TYPE_JSON);
         if (isset($dataArray[Constant::RESULT][Constant::ERROR_ID])) {
             $responseCode = $dataArray[Constant::RESULT][Constant::ERROR_ID];

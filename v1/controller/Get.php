@@ -30,7 +30,7 @@ require_once '../General.php';
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
  */
-class Get extends General
+class Get
 {
 
     /**
@@ -45,23 +45,24 @@ class Get extends General
      */
     public function __call(string $method, array $arguments): int
     {
+        $general = new General();
         $object = null;
         if (str_replace('show', '', $method) === $arguments[2]) {
-            $object = $this->objectClass($arguments[2]);
+            $object = $general->objectClass($arguments[2], $arguments[3]);
         }
         try {
-            ${'list'.$arguments[2]} = $object->{'get'.$arguments[2]}(
+            ${'list'} = $object->{'get'}(
                 $arguments[0]
             );
             if ($arguments[1]) {
-                ${'list'.$arguments[2]} = $object->{'list'.$arguments[2]}(
+                ${'list'} = $object->{'list'}(
                     $arguments[0]
                 );
             }
             header(Constant::CONTENT_TYPE_JSON);
             print_r(
                 json_encode(
-                    ${'list'.$arguments[2]},
+                    ${'list'},
                     JSON_THROW_ON_ERROR
                 ),
                 false
