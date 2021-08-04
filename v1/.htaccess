@@ -6,10 +6,17 @@ Options All -Indexes
 
 #Rules for patients object
 #Get
-RewriteRule ^pacientes/([0-9]+)$ view/pacientes.php?id=$1
-RewriteRule ^pacientes/list$ view/pacientes.php?page=1
+RewriteRule ^pacientes/([0-9]+)$ view/views.php?id=$1
+RewriteRule ^pacientes/list$ view/views.php?page=1
 #Post, put, delete
-RewriteRule ^pacientes$ view/pacientes.php
+RewriteRule ^pacientes$ view/views.php
+
+#Rules for dates object
+#Get
+RewriteRule ^citas/([0-9]+)$ view/views.php?id=$1
+RewriteRule ^citas/list$ view/views.php?page=1
+#Post, put, delete
+RewriteRule ^citas$ view/views.php
 
 
 # remove ext .php
