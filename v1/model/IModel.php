@@ -9,14 +9,14 @@ declare(strict_types=1);
  * @package  Vitriapp
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
- * @Date:    2021/7/31 10:43:46
+ * @Date:    2021/8/3 9:8:20
  * @link     https://www.vitriapp.com PHP License 1.0
  */
 
-namespace services\set;
+namespace services\v1\model;
 
 /**
- * Class Regular
+ * Interface IModel
  *
  * @category Developer
  * @package  Vitriapp
@@ -24,17 +24,14 @@ namespace services\set;
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
  */
-class Regular
+interface IModel
 {
-
-    final public function results(string $key = null): string
-    {
-        $return['pacientes'] = 'Patients';
-        $return['citas']     = 'Dates';
-
-        if (!array_key_exists($key, $return)) {
-            return '';
-        }
-        return $return[$key];
-    }
+    public function list(int $page = 1): array;
+    public function get(int $codes): array;
+    public function postValidate(string $json): array;
+    public function putValidate(string $json): array;
+    public function deleteValidate(string $json): array;
+    public function insert(): int;
+    public function update(): int;
+    public function delete(): int;
 }

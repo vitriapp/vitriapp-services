@@ -32,6 +32,7 @@ require_once '../controller/Put.php';
 require_once '../controller/Delete.php';
 require_once '../error/Error.php';
 require_once '../General.php';
+require_once '../../set/Regular.php';
 
 $constant = new Constant();
 $value = (int)filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
@@ -46,14 +47,20 @@ if ($constant->method() === Constant::GET_DATA) {
         $general->method($util->getEntityUri())}(
             $idUser,
             false,
-            $general->method($util->getEntityUri())
+            $general->method(
+                $util->getEntityUri()
+            ),
+            'get'
         );
     } elseif ($idUser === 0 && $value > 0) {
         $get->{'show'.
         $general->method($util->getEntityUri())}(
             $value,
             true,
-            $general->method($util->getEntityUri())
+            $general->method(
+                $util->getEntityUri()
+            ),
+            'get'
         );
     } else {
         $error = new Error();
@@ -61,13 +68,22 @@ if ($constant->method() === Constant::GET_DATA) {
     }
 } elseif ($constant->method() === Constant::POST_DATA) {
     $post = new Post();
-    $post->{'add'.$general->method($util->getEntityUri())}();
+    $post->{'add'.
+    $general->method($util->getEntityUri())}(
+        $general->method($util->getEntityUri())
+    );
 } elseif ($constant->method() === Constant::PUT_DATA) {
     $put = new Put();
-    $put->{'edit'.$general->method($util->getEntityUri())}();
+    $put->{'edit'.
+    $general->method($util->getEntityUri())}(
+        $general->method($util->getEntityUri())
+    );
 } elseif ($constant->method() === Constant::DELETE_DATA) {
     $delete = new Delete();
-    $delete->{'remove'.$general->method($util->getEntityUri())}();
+    $delete->{'remove'.
+    $general->method($util->getEntityUri())}(
+        $general->method($util->getEntityUri())
+    );
 } else {
     $error = new Error();
     $error->display();

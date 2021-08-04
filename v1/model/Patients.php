@@ -18,10 +18,12 @@ namespace services\v1\model;
 use JsonException;
 use services\master\connection\Executor;
 use services\master\Responses;
-use services\set\Constant;
+use services\v1\General;
 
 require_once '../../master/connection/Executor.php';
 require_once '../../master/Responses.php';
+require_once '../General.php';
+require_once 'IModel.php';
 
 /**
  * Class Patients
@@ -32,7 +34,7 @@ require_once '../../master/Responses.php';
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
  */
-class Patients
+class Patients implements IModel
 {
 
     private string $tablePatients = 'pacientes';
@@ -45,7 +47,6 @@ class Patients
     private string $telephone = '';
     private string $birth = '0000-00-00';
     private string $email = '';
-    private string $token = '';
 
     /**
      * List patients
@@ -57,7 +58,7 @@ class Patients
      * @return mixed | int
      * @throws JsonException
      */
-    final public function listPatients(int $page = 1):array
+    final public function list(int $page = 1):array
     {
         $process = new Executor();
         $initial  = 0 ;
@@ -81,78 +82,11 @@ class Patients
      * @return mixed | int
      * @throws JsonException
      */
-    final public function getPatients(int $codes):array
+    final public function get(int $codes):array
     {
         $process = new Executor();
         $query = "CALL get_patient($codes)";
         return $process->getData($query);
-    }
-
-    /**
-     * Action process
-     *
-     * This method is useful for execute various actions required
-     *
-     * @param string $json   for show data from response
-     * @param string $option for execute process
-     *
-     * @return mixed
-     * @throws JsonException
-     */
-    final public function actionProcess(string $json, string $option):array
-    {
-        $response = new Responses();
-        $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        if (!isset($array['token'])) {
-            return $response->unauthorized();
-        }
-        $this->token = $array['token'];
-        $value =   $this->findToken();
-        $execute = null;
-        if ($option === 'post') {
-            return $this->executeProcess($value, $json, 'post');
-        }
-        if ($option === 'put') {
-            $execute = $this->executeProcess($value, $json, 'put');
-        }
-        if ($option === 'delete') {
-            $execute = $this->executeProcess($value, $json, 'delete');
-        }
-        return $execute;
-    }
-
-    /**
-     * Post process save
-     *
-     * This method return result execute query for save patient
-     *
-     * @param array  $arrayToken data text field
-     * @param string $json       data text field
-     * @param string $option     for execute process
-     *
-     * @return string | int | mixed
-     * @throws JsonException
-     */
-    private function executeProcess(
-        array $arrayToken,
-        string $json,
-        string $option
-    ):array {
-        $response = new Responses();
-        $execute  = null;
-        if ($arrayToken) {
-            if ($option === 'post') {
-                $execute = $this->postValidate($json);
-            }
-            if ($option === 'put') {
-                $execute = $this->putValidate($json);
-            }
-            if ($option === 'delete') {
-                $execute = $this->deleteValidate($json);
-            }
-            return $execute;
-        }
-        return $response->unauthorized(Constant::INVALID_TOKEN);
     }
 
     /**
@@ -170,14 +104,17 @@ class Patients
         $response = new Responses();
         $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
-        $this->incorrectFormat($array['nombre'], $array['dni'], $array['correo']);
+        $this->incorrectFormat(
+            $array['nombre'],
+            $array['dni'],
+            $array['correo']
+        );
 
         $this->validateRequired(
             $array['nombre'],
             $array['dni'],
             $array['correo']
         );
-
         $this->validateAnother(
             $array['telefono'],
             $array['direccion'],
@@ -186,7 +123,7 @@ class Patients
             $array['fechaNacimiento']
         );
 
-        $respond = $this->insertPatient();
+        $respond = $this->insert();
 
         if ($respond) {
             $answer = $response->response;
@@ -211,11 +148,12 @@ class Patients
     final public function putValidate(string $json):array
     {
         $responses = new Responses();
+        $general = new General();
         $information = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
-        $this->validateIdentity($information['pacienteId']);
+        $general->validateIdentity($information['id']);
 
-        $this->codeUser = $information['pacienteId'];
+        $this->codeUser = $information['id'];
 
         $this->validateRequired(
             $information['nombre'],
@@ -231,11 +169,11 @@ class Patients
             $information['fechaNacimiento']
         );
 
-        $respond = $this->updatePatient();
+        $respond = $this->update();
         if ($respond) {
             $answer = $responses->response;
             $answer['result'] = [
-                'pacienteId' => $this->codeUser
+                'id' => $this->codeUser
             ];
             return $answer;
         }
@@ -256,100 +194,21 @@ class Patients
     final public function deleteValidate(string $json):array
     {
         $responses = new Responses();
+        $general = new General();
         $information = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
-        $this->validateIdentity($information['pacienteId']);
+        $general->validateIdentity($information['id']);
+        $this->codeUser = $information['id'];
 
-        $this->codeUser = $information['pacienteId'];
-
-        $respond = $this->deletePatient();
+        $respond = $this->delete();
         if ($respond) {
             $answer = $responses->response;
             $answer['result'] = [
-                'pacienteId' => $this->codeUser
+                'id' => $this->codeUser
             ];
             return $answer;
         }
         return $responses->internalError();
-    }
-
-    /**
-     * Incorrect format
-     *
-     * This method return result execute query for save patient
-     *
-     * @param string $nameUser name user
-     * @param string $identity id user
-     * @param string $email    email user
-     *
-     * @return string | int | mixed
-     */
-    private function incorrectFormat(
-        string $nameUser,
-        string $identity,
-        string $email
-    ):string {
-        $response = new Responses();
-        if (!isset($nameUser, $identity, $email)) {
-            return $response->formatNotCorrect();
-        }
-        return '';
-    }
-
-    /**
-     * Validate field
-     *
-     * This method return result execute query for save patient
-     *
-     * @param string $name     name user
-     * @param string $identity identity user
-     * @param string $email    postal user
-     *
-     * @return string | int | mixed
-     */
-    private function validateRequired(
-        string $name,
-        string $identity,
-        string $email
-    ):bool {
-        if (isset($name, $identity, $email)) {
-            $this->nameUser = $name;
-            $this->identity = $identity;
-            $this->email = $email;
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Validate field
-     *
-     * This method return result execute query for save patient
-     *
-     * @param string $telephone telephone user
-     * @param string $address   address user
-     * @param string $postal    postal user
-     * @param string $gender    gender user
-     * @param string $birth     birth date user
-     *
-     * @return string | int | mixed
-     */
-    private function validateAnother(
-        string $telephone,
-        string $address,
-        string $postal,
-        string $gender,
-        string $birth
-    ):bool {
-        if (isset($telephone, $address, $postal, $gender, $birth)) {
-            $this->telephone = $telephone;
-            $this->address = $address;
-            $this->postal = $postal;
-            $this->gender = $gender;
-            $this->birth = $birth;
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -360,11 +219,15 @@ class Patients
      * @return string | int | mixed
      * @throws JsonException
      */
-    private function insertPatient():int
+    final public function insert():int
     {
         $process = new Executor();
         $query = 'INSERT INTO ' . $this->tablePatients . "
-        (DNI,Nombre,Direccion,CodigoPostal,Telefono,Genero,FechaNacimiento,Correo)
+        (
+        DNI, Nombre, Direccion,
+        CodigoPostal, Telefono, Genero,
+        FechaNacimiento, Correo
+        )
         values
         (
         '$this->identity', '$this->nameUser', '$this->address',
@@ -378,24 +241,6 @@ class Patients
     }
 
     /**
-     * Validate identity
-     *
-     * This method return result validate identity user
-     *
-     * @param string $identity id user
-     *
-     * @return string | int | mixed
-     */
-    private function validateIdentity(string $identity):string
-    {
-        $responses = new Responses();
-        if (!isset($identity)) {
-            return $responses->formatNotCorrect();
-        }
-        return '';
-    }
-
-    /**
      * Update patient
      *
      * This method return result execute query update patient
@@ -403,7 +248,7 @@ class Patients
      * @return string | int | mixed
      * @throws JsonException
      */
-    private function updatePatient():int
+    final public function update():int
     {
         $process = new Executor();
         $query = 'UPDATE ' . $this->tablePatients . "
@@ -432,7 +277,7 @@ class Patients
      * @return string | int | mixed
      * @throws JsonException
      */
-    private function deletePatient():int
+    final public function delete():int
     {
         $process = new Executor();
         $query = 'DELETE FROM ' . $this->tablePatients . " 
@@ -446,52 +291,81 @@ class Patients
     }
 
     /**
-     * Find token
+     * Validate field
      *
-     * This method return data token, user id and state from user
+     * This method return result execute query for save patient
+     *
+     * @param string $name     name user
+     * @param string $identity identity user
+     * @param string $email    postal user
      *
      * @return string | int | mixed
-     * @throws JsonException
      */
-    private function findToken():array
-    {
-        $process = new Executor();
-        $query = "SELECT 
-        TokenId,
-        UsuarioId,
-        Estado 
-        from usuarios_token WHERE 
-        Token = '" . $this->token . "' AND 
-        Estado = 'Activo'";
-        $respond = $process->getData($query);
-        if ($respond) {
-            return $respond;
+    final public function validateRequired(
+        string $name,
+        string $identity,
+        string $email
+    ):bool {
+        if (isset($name, $identity, $email)) {
+            $this->nameUser = $name;
+            $this->identity = $identity;
+            $this->email = $email;
+            return true;
         }
-        return [];
+        return false;
     }
 
     /**
-     * Update token
+     * Validate field
      *
-     * This method is useful for update token user
+     * This method return result execute query for save patient
      *
-     * @param string $token for show quantity registers
+     * @param string $telephone telephone user
+     * @param string $address   address user
+     * @param string $postal    postal user
+     * @param string $gender    gender user
+     * @param string $birth     birth date user
      *
-     * @return mixed | int
-     * @throws JsonException
+     * @return string | int | mixed
      */
-    private function updateToken(string $token):int
-    {
-        $userTable = 'usuarios_token';
-        $process = new Executor();
-        $datetime = date('Y-m-d H:i');
-        $query = 'UPDATE ' . $userTable . " 
-                SET Fecha = '$datetime' 
-                WHERE TokenId = '$token' ";
-        $respond = $process->nonQuery($query);
-        if ($respond >= 1) {
-            return $respond;
+    final public function validateAnother(
+        string $telephone,
+        string $address,
+        string $postal,
+        string $gender,
+        string $birth
+    ):bool {
+        if (isset($telephone, $address, $postal, $gender, $birth)) {
+            $this->telephone = $telephone;
+            $this->address = $address;
+            $this->postal = $postal;
+            $this->gender = $gender;
+            $this->birth = $birth;
+            return true;
         }
-        return 0;
+        return false;
+    }
+
+    /**
+     * Incorrect format
+     *
+     * This method return result execute query for save patient
+     *
+     * @param string $nameUser name user
+     * @param string $identity id user
+     * @param string $email    email user
+     *
+     * @return string | int | mixed
+     */
+    final public function incorrectFormat(
+        string $nameUser,
+        string $identity,
+        string $email
+    ):string {
+        $response = new Responses();
+        if (!isset($nameUser, $identity, $email)) {
+            return $response->formatNotCorrect();
+        }
+        return '';
     }
 }
