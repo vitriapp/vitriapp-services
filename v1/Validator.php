@@ -39,8 +39,9 @@ class Validator
      *
      * This method is useful for execute various actions required
      *
-     * @param string $method
-     * @param array  $arguments
+     * @method actionProcess(array $value1, string $method, string $value) f
+     * @param  string $method
+     * @param  array  $arguments
      *
      * @return mixed
      * @throws JsonException
