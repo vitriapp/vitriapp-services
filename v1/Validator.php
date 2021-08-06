@@ -29,7 +29,7 @@ require_once 'General.php';
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
- * @method   Validator actionProcess(array $value1, string $method, string $value) f
+ * @method   Validator actionProcess(array $array, string $method, string $value)
  */
 class Validator
 {
@@ -39,9 +39,8 @@ class Validator
      *
      * This method is useful for execute various actions required
      *
-     * @method actionProcess(array $value1, string $method, string $value) f
-     * @param  string $method
-     * @param  array  $arguments
+     * @param string $method    name method dynamic
+     * @param array  $arguments for search one or various results
      *
      * @return mixed
      * @throws JsonException
