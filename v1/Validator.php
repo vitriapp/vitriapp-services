@@ -29,8 +29,7 @@ require_once 'General.php';
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
- * @method   Validator actionProcess(array $information, string $method, string $value) for process request
-
+ * @method   Validator actionProcess(array $value1, string $method, string $value) f
  */
 class Validator
 {
@@ -46,7 +45,7 @@ class Validator
      * @return mixed
      * @throws JsonException
      */
-    final public function __call(string $method, array $arguments):array
+    public function __call(string $method, array $arguments):array
     {
         $response = new Responses();
         $general = new General();
