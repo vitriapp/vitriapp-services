@@ -18,7 +18,7 @@ header("Status: 404 Not Found");
 header('Content-Type:application/json;charset=utf-8');
 http_response_code(404);
 
-$response['status'] = "error";
+$response['status'] = "Error";
 $response['result'] = array(
     "error_id" => "404",
     "error_msg" => "No encontramos el recurso solicitado."
