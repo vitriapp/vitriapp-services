@@ -39,7 +39,7 @@ class Validator
      * This method is useful for execute various actions required
      *
      * @param string $method
-     * @param array $arguments
+     * @param array  $arguments
      *
      * @return mixed
      * @throws JsonException
@@ -104,7 +104,7 @@ class Validator
         string $option,
         string $object
     ):array {
-        require_once 'model/'.$object.'.php';
+        include_once sprintf("model/%s.php", $object);
         $response = new Responses();
         $general = new General();
         $objectClass = $general->selectClass($object);

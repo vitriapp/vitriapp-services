@@ -49,9 +49,9 @@ class Patients implements IModel
     private string $email = '';
 
     /**
-     * List patients
+     * List
      *
-     * This method is useful for get list patients from database
+     * This method is useful for get list register from database
      *
      * @param int $page for show quantity registers
      *
@@ -73,9 +73,9 @@ class Patients implements IModel
     }
 
     /**
-     * Get patient
+     * Get
      *
-     * This method is useful for get one patient from code
+     * This method is useful for get one register from code
      *
      * @param int $codes for show data from code patient
      *
@@ -186,7 +186,7 @@ class Patients implements IModel
      *
      * This method is useful validate token for performed action in database
      *
-     * @param string $json for show data from code patient
+     * @param string $json for show data from code
      *
      * @return mixed
      * @throws JsonException
@@ -212,7 +212,7 @@ class Patients implements IModel
     }
 
     /**
-     * Insert patient
+     * Insert register
      *
      * This method return result execute query insert in database
      *
@@ -241,9 +241,9 @@ class Patients implements IModel
     }
 
     /**
-     * Update patient
+     * Update
      *
-     * This method return result execute query update patient
+     * This method return result execute query update
      *
      * @return string | int | mixed
      * @throws JsonException
@@ -270,9 +270,9 @@ class Patients implements IModel
     }
 
     /**
-     * Delete patient
+     * Delete
      *
-     * This method return result execute query delete patient
+     * This method return result execute query delete
      *
      * @return string | int | mixed
      * @throws JsonException
