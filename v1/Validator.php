@@ -40,6 +40,7 @@ class Validator
      *
      * @param string $method
      * @param array  $arguments
+     * @method string actionProcess() for process request
      *
      * @return mixed
      * @throws JsonException

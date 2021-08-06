@@ -27,6 +27,15 @@ namespace services\set;
 class Regular
 {
 
+    /**
+     * Results
+     *
+     * This method is useful for return class trough of key word
+     *
+     * @param string $key for show data from code patient
+     *
+     * @return mixed
+     */
     final public function results(string $key = null): string
     {
         $return['pacientes'] = 'Patients';
