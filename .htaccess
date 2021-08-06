@@ -1,4 +1,3 @@
-
 RewriteEngine On
 
 Options -Indexes
@@ -14,18 +13,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.*)$ $1.html
 
-
 # Si la ruta no es un archivo existente, ni una carpeta
 # Reescribir al index
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)/$ index.php?url=$1 [R=301,L]
-
-ErrorDocument 404 /error-msg.php
-ErrorDocument 500 /error-msg.php
-ErrorDocument 400 /error-msg.php
-ErrorDocument 401 /error-msg.php
-ErrorDocument 403 /error-msg.php
 
 <FilesMatch "\.(htaccess|htpasswd|ini|phps|fla|psd|log|sh)$">
 Order allow,deny
