@@ -13,15 +13,15 @@ declare(strict_types=1);
  * @link     https://www.vitriapp.com PHP License 1.0
  */
 
-header("HTTP/1.0 404 Not Found");
-header("Status: 404 Not Found");
+header('HTTP/1.0 404 Not Found');
+header('Status: 404 Not Found');
 header('Content-Type:application/json;charset=utf-8');
 http_response_code(404);
 
-$response['status'] = "Error";
+$response['status'] = 'Error';
 $response['result'] = array(
-    "error_id" => "404",
-    "error_msg" => "No encontramos el recurso solicitado."
+    'error_id' => '404',
+    'error_msg' => 'No encontramos el recurso solicitado.'
 );
 
 try {
