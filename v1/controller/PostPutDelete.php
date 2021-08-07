@@ -19,7 +19,6 @@ use JsonException;
 use services\set\Constant;
 use services\v1\General;
 
-require_once '../Validator.php';
 require_once '../../master/Responses.php';
 require_once '../../master/connection/Executor.php';
 
