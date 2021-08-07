@@ -53,7 +53,9 @@ class PostPutDelete
         $headers = getallheaders();
 
         if (isset($headers[Constant::TOKEN], $headers['id'])
-            && $arguments[2] === 'DELETE' && $method === 'request') {
+            && $arguments[2] === 'DELETE'
+            && $method === 'request'
+        ) {
             $sendData = [
                 Constant::TOKEN => $headers[Constant::TOKEN],
                 'id' => $headers['id']

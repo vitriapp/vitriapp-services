@@ -71,7 +71,8 @@ if ($constant->method() === Constant::GET_DATA) {
         Constant::DELETE_DATA
     ],
     true
-)) {
+)
+) {
     $controller = new PostPutDelete();
     $controller->request(
         $regular->results($constant->method()),
