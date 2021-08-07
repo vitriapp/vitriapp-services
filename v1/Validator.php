@@ -29,11 +29,9 @@ require_once 'General.php';
  * @author   Mario Alejandro Benitez Orozco <maalben@gmail.com>
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
- * @method   Validator actionProcess(array $array, string $method, string $value)
  */
 class Validator
 {
-
     /**
      * Action process
      *
@@ -59,32 +57,7 @@ class Validator
         }
         $token = $array['token'];
         $value =   $general->findToken($token);
-        $execute = null;
-        if ($arguments[1] === 'post') {
-            $execute = $this->executeProcess(
-                $value,
-                $arguments[0],
-                'post',
-                $object
-            );
-        }
-        if ($arguments[1] === 'put') {
-            $execute = $this->executeProcess(
-                $value,
-                $arguments[0],
-                'put',
-                $object
-            );
-        }
-        if ($arguments[1] === 'delete') {
-            $execute = $this->executeProcess(
-                $value,
-                $arguments[0],
-                'delete',
-                $object
-            );
-        }
-        return $execute;
+        return $this->executeProcess($value, $arguments[0], $arguments[1], $object);
     }
 
     /**
@@ -109,18 +82,8 @@ class Validator
         $response = new Responses();
         $general = new General();
         $objectClass = $general->selectClass($object);
-        $execute = '';
         if ($arrayToken) {
-            if ($option === 'post') {
-                $execute = $objectClass->postValidate($json);
-            }
-            if ($option === 'put') {
-                $execute = $objectClass->putValidate($json);
-            }
-            if ($option === 'delete') {
-                $execute = $objectClass->deleteValidate($json);
-            }
-            return $execute;
+            return $objectClass->{$option.'Validate'}($json);
         }
         return $response->unauthorized(Constant::INVALID_TOKEN);
     }

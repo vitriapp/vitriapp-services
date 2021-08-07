@@ -17,43 +17,40 @@ namespace services\v1;
 
 use services\master\libs\Util;
 use services\set\Constant;
+use services\set\Regular;
+use services\v1\controller\PostPutDelete;
 use services\v1\controller\Get;
-use services\v1\controller\Post;
-use services\v1\controller\Put;
-use services\v1\controller\Delete;
 use services\v1\error\Error;
 
 require_once '../../master/Responses.php';
 require_once '../../master/libs/Util.php';
 require_once '../../set/Constant.php';
 require_once '../controller/Get.php';
-require_once '../controller/Post.php';
-require_once '../controller/Put.php';
-require_once '../controller/Delete.php';
+require_once '../controller/PostPutDelete.php';
 require_once '../error/Error.php';
 require_once '../General.php';
 require_once '../../set/Regular.php';
 
 $constant = new Constant();
+$general = new General();
+$regular = new Regular();
+$util = new Util();
+
 $value = (int)filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
 $idUser = (int)filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-$util = new Util();
-$general = new General();
 
 if ($constant->method() === Constant::GET_DATA) {
     $get = new Get();
     if ($idUser > 0 && $value === 0) {
-        $get->{'show'.
+        $get->{'show' .
         $general->method($util->getEntityUri())}(
             $idUser,
             false,
-            $general->method(
-                $util->getEntityUri()
-            ),
+            $general->method($util->getEntityUri()),
             'get'
         );
     } elseif ($idUser === 0 && $value > 0) {
-        $get->{'show'.
+        $get->{'show' .
         $general->method($util->getEntityUri())}(
             $value,
             true,
@@ -66,23 +63,20 @@ if ($constant->method() === Constant::GET_DATA) {
         $error = new Error();
         $error->notFound();
     }
-} elseif ($constant->method() === Constant::POST_DATA) {
-    $post = new Post();
-    $post->{'add'.
-    $general->method($util->getEntityUri())}(
-        $general->method($util->getEntityUri())
-    );
-} elseif ($constant->method() === Constant::PUT_DATA) {
-    $put = new Put();
-    $put->{'edit'.
-    $general->method($util->getEntityUri())}(
-        $general->method($util->getEntityUri())
-    );
-} elseif ($constant->method() === Constant::DELETE_DATA) {
-    $delete = new Delete();
-    $delete->{'remove'.
-    $general->method($util->getEntityUri())}(
-        $general->method($util->getEntityUri())
+} elseif (in_array(
+    $constant->method(),
+    [
+        Constant::POST_DATA,
+        Constant::PUT_DATA,
+        Constant::DELETE_DATA
+    ],
+    true
+)) {
+    $controller = new PostPutDelete();
+    $controller->request(
+        $regular->results($constant->method()),
+        $general->method($util->getEntityUri()),
+        $constant->method()
     );
 } else {
     $error = new Error();

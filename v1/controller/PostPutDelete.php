@@ -24,7 +24,7 @@ require_once '../../master/Responses.php';
 require_once '../../master/connection/Executor.php';
 
 /**
- * Class Post for class
+ * Class PostPutDelete
  *
  * @category Developer
  * @package  Vitriapp
@@ -32,25 +32,40 @@ require_once '../../master/connection/Executor.php';
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
  */
-class Post
+class PostPutDelete
 {
-
     /**
-     * Add ENTITY method for patients
+     * Request method
      *
-     * This method is useful for insert patients
+     * This method is useful for request post, put and delete
      *
      * @param string $method    name method dynamic
      * @param array  $arguments for search one or various results
      *
      * @return mixed
+     * @throws JsonException
      */
-    public function __call(string $method, array $arguments): string
+    final public function __call(string $method, array $arguments): string
     {
         $general = new General();
-        $validator = $general->objectClass(str_replace('add', '', $method), 'post');
+        $validator=$general->objectClass($arguments[1], strtolower($arguments[2]));
         $information = file_get_contents(Constant::PHP_INPUT);
-        $dataArray = $validator->actionProcess($information, 'post', $arguments[0]);
+        $headers = getallheaders();
+
+        if (isset($headers[Constant::TOKEN], $headers['id'])
+            && $arguments[2] === 'DELETE' && $method === 'request') {
+            $sendData = [
+                Constant::TOKEN => $headers[Constant::TOKEN],
+                'id' => $headers['id']
+            ];
+            $information = json_encode($sendData, JSON_THROW_ON_ERROR);
+        }
+
+        $dataArray = $validator->actionProcess(
+            $information,
+            strtolower($arguments[2]),
+            $arguments[1]
+        );
         header(Constant::CONTENT_TYPE_JSON);
         if (isset($dataArray[Constant::RESULT][Constant::ERROR_ID])) {
             $responseCode = $dataArray[Constant::RESULT][Constant::ERROR_ID];
@@ -60,7 +75,7 @@ class Post
         try {
             print_r(json_encode($dataArray, JSON_THROW_ON_ERROR), false);
         } catch (JsonException $exception) {
-            log((float)$exception->getTrace());
+            log($exception->getMessage());
         }
         return '';
     }

@@ -32,7 +32,6 @@ require_once '../General.php';
  */
 class Get
 {
-
     /**
      * Show object method
      *
@@ -46,25 +45,20 @@ class Get
     public function __call(string $method, array $arguments): int
     {
         $general = new General();
+        $showClass = $method;
+        $classText = $arguments[2];
         $object = null;
-        if (str_replace('show', '', $method) === $arguments[2]) {
-            $object = $general->objectClass($arguments[2], $arguments[3]);
+        if (str_replace('show', '', $showClass) === $classText) {
+            $object = $general->objectClass($classText, $arguments[3]);
         }
         try {
-            ${'list'} = $object->{'get'}(
-                $arguments[0]
-            );
+            ${'list'} = $object->{'get'}($arguments[0]);
             if ($arguments[1]) {
-                ${'list'} = $object->{'list'}(
-                    $arguments[0]
-                );
+                ${'list'} = $object->{'list'}($arguments[0]);
             }
             header(Constant::CONTENT_TYPE_JSON);
             print_r(
-                json_encode(
-                    ${'list'},
-                    JSON_THROW_ON_ERROR
-                ),
+                json_encode(${'list'}, JSON_THROW_ON_ERROR),
                 false
             );
         } catch (JsonException $exception) {
