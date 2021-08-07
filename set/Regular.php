@@ -26,7 +26,6 @@ namespace services\set;
  */
 class Regular
 {
-
     /**
      * Results
      *
@@ -40,6 +39,9 @@ class Regular
     {
         $return['pacientes'] = 'Patients';
         $return['citas']     = 'Dates';
+        $return['POST']      = 'add';
+        $return['PUT']       = 'edit';
+        $return['DELETE']    = 'remove';
 
         if (!array_key_exists($key, $return)) {
             return '';

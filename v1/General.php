@@ -31,7 +31,6 @@ use services\set\Regular;
  */
 class General
 {
-
     /**
      * Method
      *

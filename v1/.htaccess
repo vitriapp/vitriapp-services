@@ -44,7 +44,7 @@ php_value docref_root 0
 php_value docref_ext 0
 
 # Specify path to PHP error log
-php_value error_log /vitriapp/services/v1/error/PHP_errors.log
+php_value error_log /vitriapp/services/PHP_errors.log
 # Specify recording of all PHP errors
 # [see footnote 3] # php_value error_reporting 999999999
 php_value error_reporting -1
