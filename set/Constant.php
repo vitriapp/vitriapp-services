@@ -64,6 +64,10 @@ class Constant
     public const DELETE_DATA = 'DELETE';
     public const CONTENT_TYPE_JSON = 'Content-Type:application/json;charset=utf-8';
     public const INVALID_TOKEN = 'Token sent is invalid or has expired';
+    public const EXECUTE_PROCESS = 'Executed process';
+    public const MESSAGE = 'Message';
+    public const CLIENT_IP = 'Client ip';
+    public const DATE_REQUEST = 'Date request';
 
     /**
      * Environment
