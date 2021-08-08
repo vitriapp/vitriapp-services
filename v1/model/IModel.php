@@ -30,6 +30,15 @@ interface IModel
 {
 
     /**
+     * Get ip client
+     *
+     * This method get ip client
+     *
+     * @return string
+     */
+    public function getClientIp(): string;
+
+    /**
      * List
      *
      * This method is useful for get list register from database
@@ -52,6 +61,39 @@ interface IModel
      * @throws JsonException
      */
     public function get(int $codes): array;
+
+    /**
+     * Get data register
+     *
+     * This method is useful for get data for use to store procedure
+     *
+     * @return array
+     */
+    public function getData(): array;
+
+    /**
+     * Get information response
+     *
+     * This method is useful for get data for use to store procedure
+     *
+     * @param string $process message process class
+     * @param string $message message successfully action
+     *
+     * @return array
+     */
+    public function getInformationResponse(string $process, string $message): array;
+
+    /**
+     * Process BD actions
+     *
+     * This method return result execute query insert in database
+     *
+     * @param string $action execute process in database
+     *
+     * @return string | int | mixed
+     * @throws JsonException
+     */
+    public function processBdActions(string $action): int;
 
     /**
      * Post validate
@@ -88,34 +130,4 @@ interface IModel
      * @throws JsonException
      */
     public function deleteValidate(string $json): array;
-
-    /**
-     * Insert register
-     *
-     * This method return result execute query insert in database
-     *
-     * @return string | int | mixed
-     * @throws JsonException
-     */
-    public function insert(): int;
-
-    /**
-     * Update
-     *
-     * This method return result execute query update
-     *
-     * @return string | int | mixed
-     * @throws JsonException
-     */
-    public function update(): int;
-
-    /**
-     * Delete
-     *
-     * This method return result execute query delete
-     *
-     * @return string | int | mixed
-     * @throws JsonException
-     */
-    public function delete(): int;
 }

@@ -28,7 +28,10 @@ use services\set\Constant;
  */
 class Responses
 {
-    public array $response = [Constant::STATUS => 'OK', Constant::RESULT => []];
+    public array $response = [
+        Constant::STATUS => 'HTTP/1.1 200 OK',
+        Constant::RESULT => []
+    ];
 
     /**
      * Method not allowed

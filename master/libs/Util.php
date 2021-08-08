@@ -140,4 +140,23 @@ class Util
             FILTER_SANITIZE_STRING
         );
     }
+
+    /**
+     * Get request
+     *
+     * This method is useful for filter field request
+     *
+     * @return mixed
+     */
+    final public function getIpClient():string
+    {
+        return (isset($_SERVER['HTTP_CLIENT_IP']) ?
+            $_SERVER['HTTP_CLIENT_IP'] :
+            isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ?
+            $_SERVER['HTTP_X_FORWARDED_FOR'] :
+            $_SERVER['REMOTE_ADDR'];
+    }
+
+
+
 }
