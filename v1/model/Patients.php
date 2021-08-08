@@ -60,6 +60,13 @@ class Patients implements IModel
     private string $dateRequest;
     private string $clientIp;
 
+    /**
+     * Class construct
+     *
+     * This method initialize objects class
+     *
+     * @return void
+     */
     public function __construct()
     {
         $util = new Util();
@@ -77,7 +84,6 @@ class Patients implements IModel
     }
 
     /**
-     *
      * Get ip client
      *
      * This method get ip client
@@ -160,8 +166,10 @@ class Patients implements IModel
      *
      * @return array
      */
-    final public function getInformationResponse(string $process, string $message): array
-    {
+    final public function getInformationResponse(
+        string $process,
+        string $message
+    ): array {
         return [
             'Success'          => $this->success,
             'Content-Type'     => $this->contentType,
@@ -312,14 +320,14 @@ class Patients implements IModel
      *
      * This method return result execute query for save patient
      *
-     * @param string $name name user
-     * @param string $identity identity user
-     * @param string $email postal user
+     * @param string $name      name user
+     * @param string $identity  identity user
+     * @param string $email     postal user
      * @param string $telephone telephone user
-     * @param string $address address user
-     * @param string $postal postal user
-     * @param string $gender gender user
-     * @param string $birth birth date user
+     * @param string $address   address user
+     * @param string $postal    postal user
+     * @param string $gender    gender user
+     * @param string $birth     birth date user
      *
      * @return string | int | mixed
      */
@@ -364,7 +372,7 @@ class Patients implements IModel
      *
      * @param string $nameUser name user
      * @param string $identity id user
-     * @param string $email email user
+     * @param string $email    email user
      *
      * @return string | int | mixed
      */
