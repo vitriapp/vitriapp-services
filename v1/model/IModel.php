@@ -29,16 +29,7 @@ use JsonException;
 interface IModel
 {
 
-    /**
-     * Get ip client
-     *
-     * This method get ip client
-     *
-     * @return string
-     */
-    public function getClientIp(): string;
-
-    /**
+     /**
      * List
      *
      * This method is useful for get list register from database

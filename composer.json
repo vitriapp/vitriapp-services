@@ -6,10 +6,11 @@
             "email": "maalben@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "mtarld/symbok-bundle": "^2.2"
+    },
 
     "require-dev": {
-        "phpmd/phpmd" : "@stable",
         "squizlabs/php_codesniffer": "3.*"
     }
 }
