@@ -307,9 +307,9 @@ class Patients extends DtoPatients implements IModel
         string $gender,
         string $birth
     ): bool {
-        if ($name      !== '' && $identity  !== '' && $email     !== '' &&
-            $telephone !== '' && $address   !== '' && $postal    !== '' &&
-            $gender    !== '' && $birth     !== '') {
+        if ($name      !== '' && $identity !== '' && $email  !== '' &&
+            $telephone !== '' && $address  !== '' && $postal !== '' &&
+            $gender    !== '' && $birth    !== '') {
             $this->setNameUser($name);
             $this->setIdentity($identity);
             $this->setEmail($email);
