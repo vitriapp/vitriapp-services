@@ -105,12 +105,12 @@ class Patients extends DtoPatients implements IModel
      */
     final public function getData(): array
     {
-        $id = 0;
+        $unique = 0;
         if ($this->getCodeUser() !== '') {
-            $id = $this->getCodeUser();
+            $unique = $this->getCodeUser();
         }
         return array(
-            "'$id'",
+            "'$unique'",
             "'".$this->getIdentity()."'",
             "'".$this->getNameUser()."'",
             "'".$this->getAddress()."'",
@@ -160,13 +160,13 @@ class Patients extends DtoPatients implements IModel
      */
     final public function processBdActions(string $action): int
     {
+        $query = "CALL sp_delete_patient('".$this->getCodeUser()."')";
         if ($action === 'insert') {
             $query = "CALL sp_new_patient(". implode(',', $this->getData()) .")";
         } elseif ($action === 'update') {
             $query = "CALL sp_update_patient(". implode(',', $this->getData()) .")";
-        } else {
-            $query = "CALL sp_delete_patient('".$this->getCodeUser()."')";
         }
+
         $respond = $this->process->nonQuery($query);
         if ($respond) {
             return $respond;
