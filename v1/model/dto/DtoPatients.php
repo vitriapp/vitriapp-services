@@ -51,6 +51,7 @@ class DtoPatients
      * This method is useful for set code user
      *
      * @param int $codeUser
+     * @return void
      */
     final public function setCodeUser(int $codeUser): void
     {
