@@ -150,29 +150,29 @@ class Util
      */
     final public function getIpClient():string
     {
-        $http_client_ip = filter_input(
+        $httpClientIp = filter_input(
             INPUT_SERVER,
             'HTTP_CLIENT_IP',
             FILTER_SANITIZE_STRING
         );
 
-        $http_forwarder = filter_input(
+        $httpForwarder = filter_input(
             INPUT_SERVER,
             'HTTP_X_FORWARDED_FOR',
             FILTER_SANITIZE_STRING
         );
 
-        $remote_address = filter_input(
+        $remoteAddress = filter_input(
             INPUT_SERVER,
             'REMOTE_ADDR',
             FILTER_SANITIZE_STRING
         );
 
-        $ip_client = $http_client_ip;
-        if (empty($ip_client) && empty($http_forwarder)) {
-            $ip_client = $remote_address;
+        $ipClient = $httpClientIp;
+        if (empty($ipClient) && empty($httpForwarder)) {
+            $ipClient = $remoteAddress;
         }
 
-        return $ip_client;
+        return $ipClient;
     }
 }
