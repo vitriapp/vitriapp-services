@@ -307,8 +307,8 @@ class Patients extends DtoPatients implements IModel
         string $gender,
         string $birth
     ): bool {
-        if (empty($name) && empty($identity) && empty($email) && empty($telephone) &&
-            empty($address) && $postal && empty($gender) && empty($birth)
+        if (empty($name) && empty($identity) && empty($email) && empty($telephone)
+            && empty($address) && $postal && empty($gender) && empty($birth)
         ) {
             $this->setNameUser($name);
             $this->setIdentity($identity);
