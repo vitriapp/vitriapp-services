@@ -339,12 +339,7 @@ class Patients extends DtoPatients implements IModel
         string $identity,
         string $email
     ): string {
-        if (!isset(
-            $nameUser,
-            $identity,
-            $email
-        )
-        ) {
+        if (empty($nameUser) || empty($identity) || empty($email)) {
             return $this->response->formatNotCorrect();
         }
         return '';
