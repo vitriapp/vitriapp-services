@@ -21,11 +21,13 @@ use services\master\libs\Util;
 use services\master\Responses;
 use services\set\Constant;
 use services\v1\General;
+use services\v1\model\dto\DtoPatients;
 
 require_once '../../master/connection/Executor.php';
 require_once '../../master/Responses.php';
 require_once '../General.php';
 require_once 'IModel.php';
+require_once 'dto/DtoPatients.php';
 
 /**
  * Class Patients
@@ -36,29 +38,12 @@ require_once 'IModel.php';
  * @license  Commercial PHP License 1.0
  * @link     https://www.vitriapp.com PHP License 1.0
  */
-class Patients implements IModel
+class Patients extends DtoPatients implements IModel
 {
     public Executor  $process;
     public Responses $response;
     public Constant  $constant;
     public General   $general;
-
-    private string $codeUser  = '';
-    private string $identity  = '';
-    private string $nameUser  = '';
-    private string $address   = '';
-    private string $postal    = '';
-    private string $gender    = '';
-    private string $telephone = '';
-    private string $birth     = '0000-00-00';
-    private string $email     = '';
-
-    private bool   $success;
-    private string $contentType;
-    private string $responds;
-    private string $status;
-    private string $dateRequest;
-    private string $clientIp;
 
     /**
      * Class construct
@@ -69,30 +54,10 @@ class Patients implements IModel
      */
     public function __construct()
     {
-        $util = new Util();
         $this->process  = new Executor();
         $this->response = new Responses();
         $this->constant = new Constant();
-        $this->general = new General();
-
-        $this->success     = true;
-        $this->contentType = 'application/json; charset=UTF-8';
-        $this->responds    = 'HTTP/1.1 200 OK';
-        $this->status      = '200';
-        $this->dateRequest = Date('Y-m-d H:i:s');
-        $this->clientIp    = $util->getIpClient();
-    }
-
-    /**
-     * Get ip client
-     *
-     * This method get ip client
-     *
-     * @return string
-     */
-    final public function getClientIp(): string
-    {
-        return $this->clientIp;
+        $this->general  = new General();
     }
 
     /**
@@ -141,19 +106,19 @@ class Patients implements IModel
     final public function getData(): array
     {
         $id = 0;
-        if ($this->codeUser !== '') {
-            $id = $this->codeUser;
+        if ($this->getCodeUser() !== '') {
+            $id = $this->getCodeUser();
         }
         return array(
             "'$id'",
-            "'$this->identity'",
-            "'$this->nameUser'",
-            "'$this->address'",
-            "'$this->postal'",
-            "'$this->telephone'",
-            "'$this->gender'",
-            "'$this->birth'",
-            "'$this->email'");
+            "'".$this->getIdentity()."'",
+            "'".$this->getNameUser()."'",
+            "'".$this->getAddress()."'",
+            "'".$this->getPostal()."'",
+            "'".$this->getTelephone()."'",
+            "'".$this->getGender()."'",
+            "'".$this->getBirth()."'",
+            "'".$this->getEmail()."'");
     }
 
     /**
@@ -170,13 +135,14 @@ class Patients implements IModel
         string $process,
         string $message
     ): array {
+        $util = new Util();
         return [
-            'Success'          => $this->success,
-            'Content-Type'     => $this->contentType,
-            'Respond'          => $this->responds,
-            'Status'           => $this->status,
-            'Date request'     => $this->dateRequest,
-            'Client ip'        => $this->getClientIp(),
+            'Success'          => true,
+            'Content-Type'     => 'application/json; charset=UTF-8',
+            'Respond'          => 'HTTP/1.1 200 OK',
+            'Status'           => '200',
+            'Date request'     => Date('Y-m-d H:i:s'),
+            'Client ip'        => $util->getIpClient(),
             'Executed process' => $process,
             'Message'          => $message
         ];
@@ -199,7 +165,7 @@ class Patients implements IModel
         } elseif ($action === 'update') {
             $query = "CALL sp_update_patient(". implode(',', $this->getData()) .")";
         } else {
-            $query = "CALL sp_delete_patient('$this->codeUser')";
+            $query = "CALL sp_delete_patient('".$this->getCodeUser()."')";
         }
         $respond = $this->process->nonQuery($query);
         if ($respond) {
@@ -261,7 +227,7 @@ class Patients implements IModel
     {
         $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         $this->general->validateIdentity($array['id']);
-        $this->codeUser = $array['id'];
+        $this->setCodeUser((int)$array['id']);
 
         $this->validateRequired(
             $array['nombre'],
@@ -301,7 +267,7 @@ class Patients implements IModel
     {
         $information = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         $this->general->validateIdentity($information['id']);
-        $this->codeUser = $information['id'];
+        $this->setCodeUser((int)$information['id']);
 
         $respond = $this->processBdActions('delete');
         if ($respond) {
@@ -352,14 +318,14 @@ class Patients implements IModel
             $birth
         )
         ) {
-            $this->nameUser  = $name;
-            $this->identity  = $identity;
-            $this->email     = $email;
-            $this->telephone = $telephone;
-            $this->address   = $address;
-            $this->postal    = $postal;
-            $this->gender    = $gender;
-            $this->birth     = $birth;
+            $this->setNameUser($name);
+            $this->setIdentity($identity);
+            $this->setEmail($email);
+            $this->setTelephone($telephone);
+            $this->setAddress($address);
+            $this->setPostal($postal);
+            $this->setGender($gender);
+            $this->setBirth($birth);
             return true;
         }
         return false;
