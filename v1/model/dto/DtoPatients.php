@@ -50,7 +50,7 @@ class DtoPatients
      *
      * This method is useful for set code user
      *
-     * @param  int $codeUser
+     * @param int $codeUser
      *
      * @return void
      */
