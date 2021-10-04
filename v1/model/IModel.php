@@ -29,15 +29,15 @@ use JsonException;
 interface IModel
 {
 
-     /**
-      * List
-      *
-      * This method is useful for get list register from database
-      *
-      * @param int $page for show quantity registers
-      *
-      * @return mixed | int
-      * @throws JsonException
+    /**
+     * List
+     *
+     * This method is useful for get list register from database
+     *
+     * @param int $page for show quantity registers
+     *
+     * @return mixed | int
+     * @throws JsonException
      */
     public function list(int $page = 1): array;
 
