@@ -34,6 +34,10 @@ class DtoPatients
     private string $email     ='';
 
     /**
+     * Get code user
+     *
+     * This method is useful for get code user
+     *
      * @return int
      */
     final public function getCodeUser(): int
@@ -42,6 +46,10 @@ class DtoPatients
     }
 
     /**
+     * Set code user
+     *
+     * This method is useful for set code user
+     *
      * @param int $codeUser
      */
     final public function setCodeUser(int $codeUser): void
@@ -50,6 +58,10 @@ class DtoPatients
     }
 
     /**
+     * Get identity
+     *
+     * This method is useful for get identity
+     *
      * @return string
      */
     final public function getIdentity(): string
@@ -58,6 +70,10 @@ class DtoPatients
     }
 
     /**
+     * Set identity
+     *
+     * This method is useful for set identity
+     *
      * @param string $identity
      */
     final public function setIdentity(string $identity): void
@@ -66,6 +82,10 @@ class DtoPatients
     }
 
     /**
+     * Set name user
+     *
+     * This method is useful for get name user
+     *
      * @param string $nameUser
      */
     final public function setNameUser(string $nameUser): void
@@ -74,6 +94,10 @@ class DtoPatients
     }
 
     /**
+     * Get name user
+     *
+     * This method is useful for get name user
+     *
      * @return string
      */
     final public function getNameUser(): string
@@ -82,6 +106,10 @@ class DtoPatients
     }
 
     /**
+     * Get address
+     *
+     * This method is useful for get address
+     *
      * @return string
      */
     final public function getAddress(): string
@@ -90,6 +118,10 @@ class DtoPatients
     }
 
     /**
+     * Set address
+     *
+     * This method is useful for set address
+     *
      * @param string $address
      */
     final public function setAddress(string $address): void
@@ -98,6 +130,10 @@ class DtoPatients
     }
 
     /**
+     * Get postal
+     *
+     * This method is useful for get postal
+     *
      * @return string
      */
     final public function getPostal(): string
@@ -106,6 +142,10 @@ class DtoPatients
     }
 
     /**
+     * Set postal
+     *
+     * This method is useful for set postal
+     *
      * @param string $postal
      */
     final public function setPostal(string $postal): void
@@ -114,6 +154,10 @@ class DtoPatients
     }
 
     /**
+     * Get gender
+     *
+     * This method is useful for get gender
+     *
      * @return string
      */
     final public function getGender(): string
@@ -122,6 +166,10 @@ class DtoPatients
     }
 
     /**
+     * Set gender
+     *
+     * This method is useful for set gender
+     *
      * @param string $gender
      */
     final public function setGender(string $gender): void
@@ -130,6 +178,10 @@ class DtoPatients
     }
 
     /**
+     * Get telephone
+     *
+     * This method is useful for get telephone
+     *
      * @return string
      */
     final public function getTelephone(): string
@@ -138,6 +190,10 @@ class DtoPatients
     }
 
     /**
+     * Set telephone
+     *
+     * This method is useful for set telephone
+     *
      * @param string $telephone
      */
     final public function setTelephone(string $telephone): void
@@ -146,6 +202,10 @@ class DtoPatients
     }
 
     /**
+     * Get birth
+     *
+     * This method is useful for get birth
+     *
      * @return string
      */
     final public function getBirth(): string
@@ -154,6 +214,10 @@ class DtoPatients
     }
 
     /**
+     * Set birth
+     *
+     * This method is useful for set birth
+     *
      * @param string $birth
      */
     final public function setBirth(string $birth): void
@@ -162,6 +226,10 @@ class DtoPatients
     }
 
     /**
+     * Get email
+     *
+     * This method is useful for get email
+     *
      * @return string
      */
     final public function getEmail(): string
@@ -170,6 +238,10 @@ class DtoPatients
     }
 
     /**
+     * Set email
+     *
+     * This method is useful for set email
+     *
      * @param string $email
      */
     final public function setEmail(string $email): void
