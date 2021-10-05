@@ -50,7 +50,7 @@ class DtoPatients
      *
      * This method is useful for set code user
      *
-     * @param int $codeUser
+     * @param int $codeUser set code user
      *
      * @return void
      */
@@ -76,7 +76,9 @@ class DtoPatients
      *
      * This method is useful for set identity
      *
-     * @param string $identity
+     * @param string $identity identification patient
+     *
+     * @return void
      */
     final public function setIdentity(string $identity): void
     {
@@ -88,7 +90,9 @@ class DtoPatients
      *
      * This method is useful for get name user
      *
-     * @param string $nameUser
+     * @param string $nameUser set name user
+     *
+     * @return void
      */
     final public function setNameUser(string $nameUser): void
     {
@@ -124,7 +128,9 @@ class DtoPatients
      *
      * This method is useful for set address
      *
-     * @param string $address
+     * @param string $address set address user
+     *
+     * @return void
      */
     final public function setAddress(string $address): void
     {
@@ -148,7 +154,9 @@ class DtoPatients
      *
      * This method is useful for set postal
      *
-     * @param string $postal
+     * @param string $postal set postal user
+     *
+     * @return void
      */
     final public function setPostal(string $postal): void
     {
@@ -172,7 +180,9 @@ class DtoPatients
      *
      * This method is useful for set gender
      *
-     * @param string $gender
+     * @param string $gender set gender user
+     *
+     * @return void
      */
     final public function setGender(string $gender): void
     {
@@ -196,7 +206,9 @@ class DtoPatients
      *
      * This method is useful for set telephone
      *
-     * @param string $telephone
+     * @param string $telephone set phone user
+     *
+     * @return void
      */
     final public function setTelephone(string $telephone): void
     {
@@ -220,7 +232,9 @@ class DtoPatients
      *
      * This method is useful for set birth
      *
-     * @param string $birth
+     * @param string $birth set birthday user
+     *
+     * @return void
      */
     final public function setBirth(string $birth): void
     {
@@ -244,7 +258,9 @@ class DtoPatients
      *
      * This method is useful for set email
      *
-     * @param string $email
+     * @param string $email set email user
+     *
+     * @return void
      */
     final public function setEmail(string $email): void
     {
